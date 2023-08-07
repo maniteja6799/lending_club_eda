@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Load Data</title>
+<title>EDA on Lending Club dataset</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -112,7 +112,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Load Data</h1>
+<h1 class="title">EDA on Lending Club dataset</h1>
 </div>
 
 
@@ -136,6 +136,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="cell" data-tags="[]" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>pd.options.display.max_colwidth <span class="op">=</span> <span class="dv">200</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
+<section id="load-data" class="level2">
+<h2 class="anchored" data-anchor-id="load-data">Load Data</h2>
 <div class="cell" data-scrolled="true" data-tags="[]" data-execution_count="3">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>loan_data_df <span class="op">=</span> pd.read_csv(<span class="st">'loan.csv'</span>, low_memory<span class="op">=</span><span class="va">False</span>)</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>column_desc_df <span class="op">=</span> pd.read_excel(<span class="st">'Data_Dictionary.xlsx'</span>)</span>
@@ -149,13 +151,14 @@ dtypes: float64(74), int64(13), object(24)
 memory usage: 33.6+ MB</code></pre>
 </div>
 </div>
+</section>
 <section id="data-cleanup" class="level2">
 <h2 class="anchored" data-anchor-id="data-cleanup">Data Cleanup</h2>
 <section id="finding-columns-having-all-null-or-90-null-data" class="level3">
 <h3 class="anchored" data-anchor-id="finding-columns-having-all-null-or-90-null-data">Finding Columns having all Null or 90% Null data</h3>
 <p>#### All Columns having 90% or more Null data</p>
 <p><strong>Note:</strong> Following list will be the superset of previous list.</p>
-<div class="cell" data-tags="[]" data-execution_count="5">
+<div class="cell" data-tags="[]" data-execution_count="4">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>atleast_90pct_empty <span class="op">=</span> loan_data_df.columns[<span class="op">~</span>(loan_data_df.isnull().<span class="bu">sum</span>(axis<span class="op">=</span><span class="dv">0</span>) <span class="op">&lt;=</span> loan_data_df.shape[<span class="dv">0</span>] <span class="op">*</span> <span class="fl">0.9</span>)].tolist()</span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Columns with atleast 90% of empty columns are : </span><span class="sc">{</span><span class="bu">len</span>(atleast_90pct_empty)<span class="sc">}</span><span class="ch">\n</span><span class="ss">"</span>)</span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(atleast_90pct_empty)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -167,7 +170,7 @@ memory usage: 33.6+ MB</code></pre>
 </div>
 <section id="columns-having-all-null" class="level4">
 <h4 class="anchored" data-anchor-id="columns-having-all-null">Columns having all Null</h4>
-<div class="cell" data-tags="[]" data-execution_count="4">
+<div class="cell" data-tags="[]" data-execution_count="5">
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>all_empty_cols<span class="op">=</span> loan_data_df.columns[loan_data_df.isna().<span class="bu">all</span>()].tolist()</span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Total number of all empty columns are : </span><span class="sc">{</span><span class="bu">len</span>(all_empty_cols)<span class="sc">}</span><span class="ch">\n</span><span class="ss">"</span>)</span>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(all_empty_cols)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
