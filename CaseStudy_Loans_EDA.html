@@ -950,6 +950,12 @@ LoanAmount &lt; 98%ile and Annual income &lt; 98%ile: num of rows: 36409
 <p><img src="CaseStudy_Loans_EDA_files/figure-html/cell-28-output-2.png" class="img-fluid"></p>
 </div>
 </div>
+<section id="summary" class="level4">
+<h4 class="anchored" data-anchor-id="summary">Summary</h4>
+<p>75 percentile of states are having default rate of around 0.15, so combining both visualizations, following states could be explored for more segmentation, * FL * HI * NV * TN * SD</p>
+<p>to understand what’s causing the defaults at higher rate.</p>
+<p>– Include in insight</p>
+</section>
 </section>
 <section id="distribution-of-average-loan-amount-and-annual-income" class="level3">
 <h3 class="anchored" data-anchor-id="distribution-of-average-loan-amount-and-annual-income">Distribution of Average loan amount and Annual Income</h3>
@@ -1008,8 +1014,8 @@ LoanAmount &lt; 98%ile and Annual income &lt; 98%ile: num of rows: 36409
 <p><img src="CaseStudy_Loans_EDA_files/figure-html/cell-32-output-2.png" class="img-fluid"></p>
 </div>
 </div>
-<section id="summary" class="level4">
-<h4 class="anchored" data-anchor-id="summary">Summary</h4>
+<section id="summary-1" class="level4">
+<h4 class="anchored" data-anchor-id="summary-1">Summary</h4>
 <p>Verified status does not have much impact on the probability of default. We need to dig deeper to confirm this fact / bias.</p>
 <div class="cell" data-tags="[]" data-execution_count="32">
 <div class="sourceCode cell-code" id="cb49"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a>ax <span class="op">=</span> loan_data_df[loan_data_df.loan_status<span class="op">==</span><span class="st">'Charged Off'</span>].groupby([<span class="st">'loan_amnt_range'</span>]).agg(</span>
@@ -1046,21 +1052,27 @@ LoanAmount &lt; 98%ile and Annual income &lt; 98%ile: num of rows: 36409
 <p><img src="CaseStudy_Loans_EDA_files/figure-html/cell-35-output-1.png" class="img-fluid"></p>
 </div>
 </div>
-<div class="cell" data-tags="[]" data-execution_count="35">
+<div class="cell" data-tags="[]" data-execution_count="50">
 <div class="sourceCode cell-code" id="cb52"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a>ax <span class="op">=</span> loan_data_df.groupby([<span class="st">'delinq_2yrs'</span>]).agg(</span>
 <span id="cb52-2"><a href="#cb52-2" aria-hidden="true" tabindex="-1"></a>                                         charge_off<span class="op">=</span>(<span class="st">'loan_status'</span>, <span class="kw">lambda</span> x: (x<span class="op">==</span><span class="st">'Charged Off'</span>).<span class="bu">sum</span>()),</span>
 <span id="cb52-3"><a href="#cb52-3" aria-hidden="true" tabindex="-1"></a>                                         fully_paid<span class="op">=</span>(<span class="st">'loan_status'</span>, <span class="kw">lambda</span> x: (x<span class="op">==</span><span class="st">'Fully Paid'</span>).<span class="bu">sum</span>()),</span>
 <span id="cb52-4"><a href="#cb52-4" aria-hidden="true" tabindex="-1"></a>                                         <span class="co"># current=('loan_status', lambda x: (x=='Current').sum()),</span></span>
-<span id="cb52-5"><a href="#cb52-5" aria-hidden="true" tabindex="-1"></a>                                        ).plot.bar(stacked<span class="op">=</span><span class="va">True</span>, xlabel<span class="op">=</span><span class="st">'delinq in 2yrs'</span>, ylabel<span class="op">=</span><span class="st">'num of loans'</span>, figsize<span class="op">=</span>(<span class="dv">10</span>, <span class="dv">8</span>))</span>
+<span id="cb52-5"><a href="#cb52-5" aria-hidden="true" tabindex="-1"></a>                                        ).plot.bar(stacked<span class="op">=</span><span class="va">False</span>, xlabel<span class="op">=</span><span class="st">'delinq in 2yrs'</span>, ylabel<span class="op">=</span><span class="st">'num of loans'</span>, logy<span class="op">=</span><span class="va">True</span>, figsize<span class="op">=</span>(<span class="dv">10</span>, <span class="dv">8</span>))</span>
 <span id="cb52-6"><a href="#cb52-6" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb52-7"><a href="#cb52-7" aria-hidden="true" tabindex="-1"></a>loan_data_df.groupby([<span class="st">'delinq_2yrs'</span>]).agg(default_rate<span class="op">=</span>(<span class="st">'loan_status'</span>, <span class="kw">lambda</span> x: (x<span class="op">==</span><span class="st">'Charged Off'</span>).<span class="bu">sum</span>() <span class="op">/</span> x.count())).plot.line(secondary_y<span class="op">=</span><span class="st">'default_rate'</span>, ax<span class="op">=</span>ax, color<span class="op">=</span><span class="st">'r'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="35">
+<div class="cell-output cell-output-display" data-execution_count="50">
 <pre><code>&lt;Axes: &gt;</code></pre>
 </div>
 <div class="cell-output cell-output-display">
 <p><img src="CaseStudy_Loans_EDA_files/figure-html/cell-36-output-2.png" class="img-fluid"></p>
 </div>
 </div>
+</section>
+<section id="summary-2" class="level4">
+<h4 class="anchored" data-anchor-id="summary-2">Summary</h4>
+<p>In the current dataset, the measure : delinquency in last 2 years is not a very useful information because even for zero deliquant borrowers, there 10% of loans are charged off.</p>
+<p>Yes when the no. of delinquency instances increase, the ratio does got up but the number of loans are so less, we can not conclude accurately.</p>
+<p>It seems that Lending club is already considering this measure while approving the loans and hardly 2% to 3% of total loans are given when there is one of more delinquency instances.</p>
 <div class="cell" data-tags="[]" data-execution_count="36">
 <div class="sourceCode cell-code" id="cb54"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 'installment_to_month_inc'</span></span>
 <span id="cb54-2"><a href="#cb54-2" aria-hidden="true" tabindex="-1"></a>ax <span class="op">=</span> loan_data_df.groupby([<span class="st">'open_to_total_acc'</span>]).agg(</span>
