@@ -1,52 +1,71 @@
-# Project Name
-> Outline a brief description of your project.
+# Lending Club Case Study
 
+We are given the loans data from consumer finance company which provide the information attributes about historical and current loans.
+
+We are required to apply exploratory data analysis learnings and activities to cleanse and analyze the data to derive the insights from this dataset.
+
+Our focus would be mostly on analyzing the risk of loans going bad (i.e. default) and corroborate or correct the conventional understanding about some financial data.
 
 ## Table of Contents
-* [General Info](#general-information)
-* [Technologies Used](#technologies-used)
-* [Conclusions](#conclusions)
-* [Acknowledgements](#acknowledgements)
+
+  - [General Information](#general-information)
+  - [Conclusions](#conclusions)
+  - [Technologies Used](#technologies-used)
+  - [Acknowledgements](#acknowledgements)
+  - [Contact](#contact)
 
 <!-- You can include any other section that is pertinent to your problem -->
 
-## General Information
-- Provide general information about your project here.
-- What is the background of your project?
-- What is the business probem that your project is trying to solve?
-- What is the dataset that is being used?
+## General Information 
+
+This project is to apply EDA techniques to the provided loan data to find out various parameters which could affect the loans to go default.
+
+Following data cleanup applied before the analysis,
+
+    - Data Cleanup and Conversion
+    - Derived Metrics
+    - Outliers Removal
+    - Data Analysis 
+  
+The analysis is mainly focused on the probability of loan is going default, and derive interesting insights on, borrower’s credit history, loan terms, loan amounts vs borrower incomes and their locations.
+
+It also surprised us and challenged some of our perceptions (e.g. verified loans would be more secure than unverified)
+
+- Lending Club Loans dataset.
+  
+  We received the loans dataset availale on github repo at [loans.csv](https://raw.githubusercontent.com/maniteja6799/lending_club_eda/master/loan.csv)
 
 <!-- You don't have to answer all the questions - just the ones relevant to your project. -->
 
 ## Conclusions
-- Conclusion 1 from the analysis
-- Conclusion 2 from the analysis
-- Conclusion 3 from the analysis
-- Conclusion 4 from the analysis
+- Probability of loan defaults based on the US states residents
+- Impact of Loan verification status
+- Probability of loan defaults based on borrowers’ delinquency data
+- Impact of loan term on payback probability
+- Impact of amount of principal received on loan turning default.
+- Impact of DTI and monthly income
+- Borrowers’ credit history and interesting finding on generational gap.
+
 
 <!-- You don't have to answer all the questions - just the ones relevant to your project. -->
 
 
 ## Technologies Used
-- library - version 1.0
-- library - version 2.0
-- library - version 3.0
+
+- Python 3.10.9
+- Jupyterlab 3.6.3
+- numpy 1.23.5
+- pandas 1.5.3
+- matplotlib 3.7.0
+- seaborn 0.12.2
 
 <!-- As the libraries versions keep on changing, it is recommended to mention the version of library used in this project -->
 
 ## Acknowledgements
-Give credit here.
-- This project was inspired by...
-- References if any...
-- This project was based on [this tutorial](https://www.example.com).
+
+We referred [Investopedia](https://investopedia.com) to understand various terminologies like revolving credit, dti, etc...
 
 
 ## Contact
-Created by [@githubusername] - feel free to contact me!
+Created by [Pawan Mani Teja Kuppili](https://github.com/maniteja6799) and [Jatan Porecha](https://github.com/porechajp)
 
-
-<!-- Optional -->
-<!-- ## License -->
-<!-- This project is open source and available under the [... License](). -->
-
-<!-- You don't have to include all sections - just the one's relevant to your project -->
