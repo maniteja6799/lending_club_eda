@@ -873,7 +873,7 @@ LoanAmount &lt; 98%ile and Annual income &lt; 98%ile: num of rows: 36409
  total rows: 37835</code></pre>
 </div>
 <div class="cell-output cell-output-display">
-<p><img src="CaseStudy_Loans_EDA_files/figure-html/cell-23-output-2.png" class="img-fluid"></p>
+<p><img src="Pawan_Mani_Teja_Kuppili_files/figure-html/cell-23-output-2.png" class="img-fluid"></p>
 </div>
 </div>
 <p>There is a clear gap in annual income for entries above 2M\$ with just two entries at 4M\$ and 6M\$ respectively. We can ignore those After removing rows that have outliers from above, we get below:</p>
@@ -895,7 +895,7 @@ LoanAmount &lt; 98%ile and Annual income &lt; 98%ile: num of rows: 36409
 <span id="cb36-7"><a href="#cb36-7" aria-hidden="true" tabindex="-1"></a>sns.heatmap(c, annot<span class="op">=</span><span class="va">True</span>, fmt<span class="op">=</span><span class="st">".1f"</span>)</span>
 <span id="cb36-8"><a href="#cb36-8" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
-<p><img src="CaseStudy_Loans_EDA_files/figure-html/cell-25-output-1.png" class="img-fluid"></p>
+<p><img src="Pawan_Mani_Teja_Kuppili_files/figure-html/cell-25-output-1.png" class="img-fluid"></p>
 </div>
 </div>
 <section id="ignoring-investor-specific-and-recovery-data-columns" class="level4">
@@ -911,7 +911,7 @@ LoanAmount &lt; 98%ile and Annual income &lt; 98%ile: num of rows: 36409
 <span id="cb37-6"><a href="#cb37-6" aria-hidden="true" tabindex="-1"></a>sns.heatmap(c, annot<span class="op">=</span><span class="va">True</span>, fmt<span class="op">=</span><span class="st">".1f"</span>)</span>
 <span id="cb37-7"><a href="#cb37-7" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
-<p><img src="CaseStudy_Loans_EDA_files/figure-html/cell-26-output-1.png" class="img-fluid"></p>
+<p><img src="Pawan_Mani_Teja_Kuppili_files/figure-html/cell-26-output-1.png" class="img-fluid"></p>
 </div>
 </div>
 <p>From the above graph, we see these group of columns highly correlated: <br> G1: ‘loan_amnt’, ‘funded_amnt’, ‘funded_amnt_inv’, ‘installment’, ‘total_pymnt’, ‘total_pymnt_inv’, ‘total_rec_prncp’, ‘total_rec_int’ <br> G2: ‘out_prncp’, ‘out_prncp_inv’ <br> G3: ‘recoveries’, ‘collection_recovery_fee’ <br> rest are not that related to each other.</p>
@@ -924,7 +924,7 @@ LoanAmount &lt; 98%ile and Annual income &lt; 98%ile: num of rows: 36409
 <pre><code>&lt;Axes: &gt;</code></pre>
 </div>
 <div class="cell-output cell-output-display">
-<p><img src="CaseStudy_Loans_EDA_files/figure-html/cell-27-output-2.png" class="img-fluid"></p>
+<p><img src="Pawan_Mani_Teja_Kuppili_files/figure-html/cell-27-output-2.png" class="img-fluid"></p>
 </div>
 </div>
 </section>
@@ -945,7 +945,7 @@ LoanAmount &lt; 98%ile and Annual income &lt; 98%ile: num of rows: 36409
 <pre><code>&lt;Axes: &gt;</code></pre>
 </div>
 <div class="cell-output cell-output-display">
-<p><img src="CaseStudy_Loans_EDA_files/figure-html/cell-28-output-2.png" class="img-fluid"></p>
+<p><img src="Pawan_Mani_Teja_Kuppili_files/figure-html/cell-28-output-2.png" class="img-fluid"></p>
 </div>
 </div>
 <section id="summary" class="level4">
@@ -963,7 +963,7 @@ LoanAmount &lt; 98%ile and Annual income &lt; 98%ile: num of rows: 36409
 <span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a>                                         avg_loan<span class="op">=</span>(<span class="st">'loan_amnt'</span>, <span class="st">'mean'</span>),</span>
 <span id="cb42-4"><a href="#cb42-4" aria-hidden="true" tabindex="-1"></a>                                        ).plot.line( xlabel<span class="op">=</span><span class="st">'State'</span>, ylabel<span class="op">=</span><span class="st">'Amount'</span>, figsize<span class="op">=</span>(<span class="dv">15</span>, <span class="dv">8</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
-<p><img src="CaseStudy_Loans_EDA_files/figure-html/cell-29-output-1.png" class="img-fluid"></p>
+<p><img src="Pawan_Mani_Teja_Kuppili_files/figure-html/cell-29-output-1.png" class="img-fluid"></p>
 </div>
 </div>
 </section>
@@ -980,7 +980,7 @@ LoanAmount &lt; 98%ile and Annual income &lt; 98%ile: num of rows: 36409
 <pre><code>&lt;Axes: &gt;</code></pre>
 </div>
 <div class="cell-output cell-output-display">
-<p><img src="CaseStudy_Loans_EDA_files/figure-html/cell-30-output-2.png" class="img-fluid"></p>
+<p><img src="Pawan_Mani_Teja_Kuppili_files/figure-html/cell-30-output-2.png" class="img-fluid"></p>
 </div>
 </div>
 <div class="cell" data-tags="[]" data-execution_count="30">
@@ -995,7 +995,7 @@ LoanAmount &lt; 98%ile and Annual income &lt; 98%ile: num of rows: 36409
 <pre><code>&lt;Axes: &gt;</code></pre>
 </div>
 <div class="cell-output cell-output-display">
-<p><img src="CaseStudy_Loans_EDA_files/figure-html/cell-31-output-2.png" class="img-fluid"></p>
+<p><img src="Pawan_Mani_Teja_Kuppili_files/figure-html/cell-31-output-2.png" class="img-fluid"></p>
 </div>
 </div>
 <div class="cell" data-tags="[]" data-execution_count="31">
@@ -1009,7 +1009,7 @@ LoanAmount &lt; 98%ile and Annual income &lt; 98%ile: num of rows: 36409
 <pre><code>&lt;Axes: &gt;</code></pre>
 </div>
 <div class="cell-output cell-output-display">
-<p><img src="CaseStudy_Loans_EDA_files/figure-html/cell-32-output-2.png" class="img-fluid"></p>
+<p><img src="Pawan_Mani_Teja_Kuppili_files/figure-html/cell-32-output-2.png" class="img-fluid"></p>
 </div>
 </div>
 <section id="summary-1" class="level4">
@@ -1023,7 +1023,7 @@ LoanAmount &lt; 98%ile and Annual income &lt; 98%ile: num of rows: 36409
 <span id="cb49-5"><a href="#cb49-5" aria-hidden="true" tabindex="-1"></a>                                        ).plot.bar(stacked<span class="op">=</span><span class="va">False</span>, xlabel<span class="op">=</span><span class="st">'Loan Amount Range'</span>, ylabel<span class="op">=</span><span class="st">'Num of Loans'</span>, figsize<span class="op">=</span>(<span class="dv">10</span>, <span class="dv">8</span>))</span>
 <span id="cb49-6"><a href="#cb49-6" aria-hidden="true" tabindex="-1"></a><span class="co">#loan_data_df.groupby(['verification_status']).agg(default_rate=('loan_status', lambda x: (x=='Charged Off').sum() / x.count())).plot.line(secondary_y='default_rate', ax=ax, color='r')</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
-<p><img src="CaseStudy_Loans_EDA_files/figure-html/cell-33-output-1.png" class="img-fluid"></p>
+<p><img src="Pawan_Mani_Teja_Kuppili_files/figure-html/cell-33-output-1.png" class="img-fluid"></p>
 </div>
 </div>
 <div class="cell" data-tags="[]" data-execution_count="49">
@@ -1034,7 +1034,7 @@ LoanAmount &lt; 98%ile and Annual income &lt; 98%ile: num of rows: 36409
 <span id="cb50-5"><a href="#cb50-5" aria-hidden="true" tabindex="-1"></a>                                        ).plot.bar(stacked<span class="op">=</span><span class="va">False</span>, xlabel<span class="op">=</span><span class="st">'Annual Income Range'</span>, ylabel<span class="op">=</span><span class="st">'Num of Loans'</span>, figsize<span class="op">=</span>(<span class="dv">10</span>, <span class="dv">8</span>))</span>
 <span id="cb50-6"><a href="#cb50-6" aria-hidden="true" tabindex="-1"></a><span class="co"># loan_data_df.groupby(['annual_inc_range']).agg(default_rate=('loan_status', lambda x: (x=='Charged Off').sum() / x.count())).plot.line(secondary_y='default_rate', ax=ax, color='r')</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
-<p><img src="CaseStudy_Loans_EDA_files/figure-html/cell-34-output-1.png" class="img-fluid"></p>
+<p><img src="Pawan_Mani_Teja_Kuppili_files/figure-html/cell-34-output-1.png" class="img-fluid"></p>
 </div>
 </div>
 <div class="cell" data-tags="[]" data-execution_count="34">
@@ -1047,7 +1047,7 @@ LoanAmount &lt; 98%ile and Annual income &lt; 98%ile: num of rows: 36409
 <span id="cb51-7"><a href="#cb51-7" aria-hidden="true" tabindex="-1"></a>loan_data_df.groupby([<span class="st">'purpose'</span>]).agg(default_rate<span class="op">=</span>(<span class="st">'loan_status'</span>, <span class="kw">lambda</span> x: (x<span class="op">==</span><span class="st">'Charged Off'</span>).<span class="bu">sum</span>() <span class="op">/</span> x.count())).plot.line(secondary_y<span class="op">=</span><span class="st">'default_rate'</span>, ax<span class="op">=</span>ax, color<span class="op">=</span><span class="st">'r'</span>, rot<span class="op">=</span><span class="dv">45</span>)</span>
 <span id="cb51-8"><a href="#cb51-8" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
-<p><img src="CaseStudy_Loans_EDA_files/figure-html/cell-35-output-1.png" class="img-fluid"></p>
+<p><img src="Pawan_Mani_Teja_Kuppili_files/figure-html/cell-35-output-1.png" class="img-fluid"></p>
 </div>
 </div>
 <div class="cell" data-tags="[]" data-execution_count="35">
@@ -1062,7 +1062,7 @@ LoanAmount &lt; 98%ile and Annual income &lt; 98%ile: num of rows: 36409
 <pre><code>&lt;Axes: &gt;</code></pre>
 </div>
 <div class="cell-output cell-output-display">
-<p><img src="CaseStudy_Loans_EDA_files/figure-html/cell-36-output-2.png" class="img-fluid"></p>
+<p><img src="Pawan_Mani_Teja_Kuppili_files/figure-html/cell-36-output-2.png" class="img-fluid"></p>
 </div>
 </div>
 </section>
@@ -1081,7 +1081,7 @@ LoanAmount &lt; 98%ile and Annual income &lt; 98%ile: num of rows: 36409
 <span id="cb54-7"><a href="#cb54-7" aria-hidden="true" tabindex="-1"></a>loan_data_df.groupby([<span class="st">'open_to_total_acc'</span>]).agg(default_rate<span class="op">=</span>(<span class="st">'loan_status'</span>, <span class="kw">lambda</span> x: (x<span class="op">==</span><span class="st">'Charged Off'</span>).<span class="bu">sum</span>() <span class="op">/</span> x.count())).plot.line(secondary_y<span class="op">=</span><span class="st">'default_rate'</span>, ax<span class="op">=</span>ax, color<span class="op">=</span><span class="st">'r'</span>)</span>
 <span id="cb54-8"><a href="#cb54-8" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
-<p><img src="CaseStudy_Loans_EDA_files/figure-html/cell-37-output-1.png" class="img-fluid"></p>
+<p><img src="Pawan_Mani_Teja_Kuppili_files/figure-html/cell-37-output-1.png" class="img-fluid"></p>
 </div>
 </div>
 <div class="cell" data-tags="[]" data-execution_count="37">
@@ -1096,7 +1096,7 @@ LoanAmount &lt; 98%ile and Annual income &lt; 98%ile: num of rows: 36409
 <pre><code>&lt;Axes: &gt;</code></pre>
 </div>
 <div class="cell-output cell-output-display">
-<p><img src="CaseStudy_Loans_EDA_files/figure-html/cell-38-output-2.png" class="img-fluid"></p>
+<p><img src="Pawan_Mani_Teja_Kuppili_files/figure-html/cell-38-output-2.png" class="img-fluid"></p>
 </div>
 </div>
 <div class="cell" data-tags="[]" data-execution_count="38">
@@ -1115,10 +1115,10 @@ LoanAmount &lt; 98%ile and Annual income &lt; 98%ile: num of rows: 36409
 <span id="cb57-13"><a href="#cb57-13" aria-hidden="true" tabindex="-1"></a>sns.heatmap(c, annot<span class="op">=</span><span class="va">True</span>, fmt<span class="op">=</span><span class="st">".2f"</span>)</span>
 <span id="cb57-14"><a href="#cb57-14" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
-<p><img src="CaseStudy_Loans_EDA_files/figure-html/cell-39-output-1.png" class="img-fluid"></p>
+<p><img src="Pawan_Mani_Teja_Kuppili_files/figure-html/cell-39-output-1.png" class="img-fluid"></p>
 </div>
 <div class="cell-output cell-output-display">
-<p><img src="CaseStudy_Loans_EDA_files/figure-html/cell-39-output-2.png" class="img-fluid"></p>
+<p><img src="Pawan_Mani_Teja_Kuppili_files/figure-html/cell-39-output-2.png" class="img-fluid"></p>
 </div>
 </div>
 <div class="cell" data-tags="[]" data-execution_count="39">
@@ -1163,7 +1163,7 @@ below 10k        below 1k                    2                1         0
 <pre><code>&lt;Axes: xlabel='verification_status', ylabel='loan_amnt_range'&gt;</code></pre>
 </div>
 <div class="cell-output cell-output-display">
-<p><img src="CaseStudy_Loans_EDA_files/figure-html/cell-40-output-3.png" class="img-fluid"></p>
+<p><img src="Pawan_Mani_Teja_Kuppili_files/figure-html/cell-40-output-3.png" class="img-fluid"></p>
 </div>
 </div>
 <div class="cell" data-tags="[]" data-execution_count="40">
@@ -1178,7 +1178,7 @@ below 10k        below 1k                    2                1         0
 <span id="cb61-9"><a href="#cb61-9" aria-hidden="true" tabindex="-1"></a>ax2.set_title(<span class="st">'Annual income to loan amount showing default rates for 60m term'</span>)</span>
 <span id="cb61-10"><a href="#cb61-10" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
-<p><img src="CaseStudy_Loans_EDA_files/figure-html/cell-41-output-1.png" class="img-fluid"></p>
+<p><img src="Pawan_Mani_Teja_Kuppili_files/figure-html/cell-41-output-1.png" class="img-fluid"></p>
 </div>
 </div>
 <div class="cell" data-tags="[]" data-execution_count="41">
@@ -1191,7 +1191,7 @@ below 10k        below 1k                    2                1         0
 <pre><code>&lt;Axes: xlabel='annual_inc_range', ylabel='Default rate'&gt;</code></pre>
 </div>
 <div class="cell-output cell-output-display">
-<p><img src="CaseStudy_Loans_EDA_files/figure-html/cell-42-output-2.png" class="img-fluid"></p>
+<p><img src="Pawan_Mani_Teja_Kuppili_files/figure-html/cell-42-output-2.png" class="img-fluid"></p>
 </div>
 </div>
 </section>
@@ -1217,7 +1217,7 @@ below 10k        below 1k                    2                1         0
 <pre><code>Text(0.5, 1.0, 'Fraction repaid vs num of defaulted loans (loan term=60)')</code></pre>
 </div>
 <div class="cell-output cell-output-display">
-<p><img src="CaseStudy_Loans_EDA_files/figure-html/cell-43-output-2.png" class="img-fluid"></p>
+<p><img src="Pawan_Mani_Teja_Kuppili_files/figure-html/cell-43-output-2.png" class="img-fluid"></p>
 </div>
 </div>
 </section>
@@ -1236,7 +1236,7 @@ below 10k        below 1k                    2                1         0
 <span id="cb66-8"><a href="#cb66-8" aria-hidden="true" tabindex="-1"></a>loan_data_df[loan_data_df.earliest_cr_line.dt.year<span class="op">&gt;</span><span class="dv">1980</span>].groupby(loan_data_df.earliest_cr_line.dt.year).agg(default_rate<span class="op">=</span>(<span class="st">'loan_status'</span>, <span class="kw">lambda</span> x: (x<span class="op">==</span><span class="st">'Charged Off'</span>).<span class="bu">sum</span>() <span class="op">/</span> x.count())).plot.line(secondary_y<span class="op">=</span><span class="st">'default_rate'</span>, ax<span class="op">=</span>ax2, color<span class="op">=</span><span class="st">'r'</span>, rot<span class="op">=</span><span class="dv">90</span>)</span>
 <span id="cb66-9"><a href="#cb66-9" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
-<p><img src="CaseStudy_Loans_EDA_files/figure-html/cell-44-output-1.png" class="img-fluid"></p>
+<p><img src="Pawan_Mani_Teja_Kuppili_files/figure-html/cell-44-output-1.png" class="img-fluid"></p>
 </div>
 </div>
 <div class="cell" data-tags="[]" data-execution_count="44">
@@ -1252,7 +1252,7 @@ below 10k        below 1k                    2                1         0
 <pre><code>Text(0.5, 1.0, 'installment/montly_income vs num of defaulted loans')</code></pre>
 </div>
 <div class="cell-output cell-output-display">
-<p><img src="CaseStudy_Loans_EDA_files/figure-html/cell-45-output-2.png" class="img-fluid"></p>
+<p><img src="Pawan_Mani_Teja_Kuppili_files/figure-html/cell-45-output-2.png" class="img-fluid"></p>
 </div>
 </div>
 <div class="cell" data-tags="[]" data-execution_count="45">
@@ -1261,7 +1261,7 @@ below 10k        below 1k                    2                1         0
 <span id="cb69-3"><a href="#cb69-3" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">'utilization of credit available vs num of defaulted loans'</span>)</span>
 <span id="cb69-4"><a href="#cb69-4" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
-<p><img src="CaseStudy_Loans_EDA_files/figure-html/cell-46-output-1.png" class="img-fluid"></p>
+<p><img src="Pawan_Mani_Teja_Kuppili_files/figure-html/cell-46-output-1.png" class="img-fluid"></p>
 </div>
 </div>
 
