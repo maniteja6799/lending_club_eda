@@ -232,11 +232,9 @@ Columns to be removed : dict_keys(['pymnt_plan', 'initial_list_status', 'collect
        'Credit Card Consolidation', 'Debt consolidation',
        'Small Business Loan', 'Credit Card Loan',
        ...
-       'GUNNER', 'Major Credit Card Consolidation',
-       'Debt consolidation at lower rate', 'Simplified Finances',
-       'Get those cards paid!', 'To Pay Off A High Interest Credit Card',
-       'Debt Reduction Loan', 'PAY MY CREDIT CARD ', 'Hate Wellsfargo ',
-       'Darren's Car'],
+       'Stav', 'Florida Vacation 2011', 'Ninja zx6', 'Pay off Masters Degree',
+       'CREDIT CARD CONSOLIDATION LOAN 01', 'your rate is better than my rate',
+       'Concession Trailer', 'gregs', 'EZover', 'JAL Loan'],
       dtype='object', length=19615) 
 -------purpose-----------
  Index(['debt_consolidation', 'credit_card', 'other', 'home_improvement',
@@ -542,15 +540,15 @@ dtype: int64</code></pre>
 <div class="cell-output cell-output-display" data-execution_count="16">
 <pre><code>1000.0    25594
 30.0        245
-23.0        241
 15.0        241
+23.0        241
 24.0        235
           ...  
-85.0          1
 89.0          1
-106.0         1
-115.0         1
-96.0          1
+107.0         1
+85.0          1
+97.0          1
+95.0          1
 Name: mths_since_last_delinq, Length: 96, dtype: int64</code></pre>
 </div>
 </div>
@@ -632,12 +630,12 @@ dtype: int64</code></pre>
 <tr class="even">
 <td data-quarto-table-cell-role="th">3</td>
 <td>delinq_2yrs</td>
-<td>The number of 30+ days past-due incidences of delinquency in the borrower's credit file for the past 2 years. This would show the irregular behavior in paying back</td>
+<td>The number of 30+ days past-due incidences of delinquency in the borrower's credit file for the past 2 years</td>
 </tr>
 <tr class="odd">
 <td data-quarto-table-cell-role="th">4</td>
 <td>dti</td>
-<td>A ratio (lower is better) calculated using the borrower’s total monthly debt payments on the total debt obligations, excluding mortgage and the requested LC loan, divided by the borrower’s self-re...</td>
+<td>A ratio calculated using the borrower’s total monthly debt payments on the total debt obligations, excluding mortgage and the requested LC loan, divided by the borrower’s self-reported monthly inc...</td>
 </tr>
 <tr class="even">
 <td data-quarto-table-cell-role="th">5</td>
@@ -682,7 +680,7 @@ dtype: int64</code></pre>
 <tr class="even">
 <td data-quarto-table-cell-role="th">13</td>
 <td>inq_last_6mths</td>
-<td>The number of inquiries in past 6 months (excluding auto and mortgage inquiries), increased inquiry would mean the person is shopping around for loan and possibly getting rejections</td>
+<td>The number of inquiries in past 6 months (excluding auto and mortgage inquiries)</td>
 </tr>
 <tr class="odd">
 <td data-quarto-table-cell-role="th">14</td>
@@ -692,7 +690,7 @@ dtype: int64</code></pre>
 <tr class="even">
 <td data-quarto-table-cell-role="th">15</td>
 <td>int_rate</td>
-<td>Interest Rate on the loan Would high interest rate have impact on loan repayment status, candidate for univariate analysis.</td>
+<td>Interest Rate on the loan</td>
 </tr>
 <tr class="odd">
 <td data-quarto-table-cell-role="th">16</td>
@@ -732,12 +730,12 @@ dtype: int64</code></pre>
 <tr class="even">
 <td data-quarto-table-cell-role="th">23</td>
 <td>mths_since_last_delinq</td>
-<td>The number of months since the borrower's last delinquency. NA is good, and then higher the value is better then lower value, it shows the stability of credit profile.</td>
+<td>The number of months since the borrower's last delinquency.</td>
 </tr>
 <tr class="odd">
 <td data-quarto-table-cell-role="th">24</td>
 <td>open_acc</td>
-<td>The number of open credit lines in the borrower's credit file. More credit lines would show the behavior of taking larger liabilities, which may or may not good, need to correlate with loan status...</td>
+<td>The number of open credit lines in the borrower's credit file.</td>
 </tr>
 <tr class="even">
 <td data-quarto-table-cell-role="th">25</td>
@@ -752,17 +750,17 @@ dtype: int64</code></pre>
 <tr class="even">
 <td data-quarto-table-cell-role="th">27</td>
 <td>pub_rec</td>
-<td>Number of derogatory public records, NA is good, but higher the number then lower the credit rating for the person. It shows that person is meticulous in payments.</td>
+<td>Number of derogatory public records</td>
 </tr>
 <tr class="odd">
 <td data-quarto-table-cell-role="th">28</td>
 <td>pub_rec_bankruptcies</td>
-<td>Number of public record bankruptcies, NA is good, but higher bankruptcies mean the person often does not have capacity to pay and may have erratic income sources.</td>
+<td>Number of public record bankruptcies</td>
 </tr>
 <tr class="even">
 <td data-quarto-table-cell-role="th">29</td>
 <td>purpose</td>
-<td>A category provided by the borrower for the loan request. Purpose can be a good candidate for segmented univeriate analysis.</td>
+<td>A category provided by the borrower for the loan request.</td>
 </tr>
 <tr class="odd">
 <td data-quarto-table-cell-role="th">30</td>
@@ -772,12 +770,12 @@ dtype: int64</code></pre>
 <tr class="even">
 <td data-quarto-table-cell-role="th">31</td>
 <td>revol_bal</td>
-<td>Total credit revolving balance. This is basically rollover credit balance (basically paying your credit card bill partially or no payment). Higher the amount is bad.</td>
+<td>Total credit revolving balance</td>
 </tr>
 <tr class="odd">
 <td data-quarto-table-cell-role="th">32</td>
 <td>revol_util</td>
-<td>Revolving line utilization rate, or the amount of credit the borrower is using relative to all available revolving credit. The utilization ratio, lower is better. Good candidate for segmented univ...</td>
+<td>Revolving line utilization rate, or the amount of credit the borrower is using relative to all available revolving credit.</td>
 </tr>
 <tr class="even">
 <td data-quarto-table-cell-role="th">33</td>
@@ -1028,13 +1026,13 @@ LoanAmount &lt; 98%ile and Annual income &lt; 98%ile: num of rows: 36409
 <p><img src="CaseStudy_Loans_EDA_files/figure-html/cell-33-output-1.png" class="img-fluid"></p>
 </div>
 </div>
-<div class="cell" data-tags="[]" data-execution_count="33">
+<div class="cell" data-tags="[]" data-execution_count="49">
 <div class="sourceCode cell-code" id="cb50"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a>ax <span class="op">=</span> loan_data_df[loan_data_df.loan_status<span class="op">==</span><span class="st">'Charged Off'</span>].groupby([<span class="st">'annual_inc_range'</span>]).agg(</span>
 <span id="cb50-2"><a href="#cb50-2" aria-hidden="true" tabindex="-1"></a>                                         not_verified<span class="op">=</span>(<span class="st">'verification_status'</span>, <span class="kw">lambda</span> x: (x<span class="op">==</span><span class="st">'Not Verified'</span>).<span class="bu">sum</span>()),</span>
 <span id="cb50-3"><a href="#cb50-3" aria-hidden="true" tabindex="-1"></a>                                         source_verified<span class="op">=</span>(<span class="st">'verification_status'</span>, <span class="kw">lambda</span> x: (x<span class="op">==</span><span class="st">'Source Verified'</span>).<span class="bu">sum</span>()),</span>
 <span id="cb50-4"><a href="#cb50-4" aria-hidden="true" tabindex="-1"></a>                                         verified<span class="op">=</span>(<span class="st">'verification_status'</span>, <span class="kw">lambda</span> x: (x<span class="op">==</span><span class="st">'Verified'</span>).<span class="bu">sum</span>()),</span>
-<span id="cb50-5"><a href="#cb50-5" aria-hidden="true" tabindex="-1"></a>                                        ).plot.bar(stacked<span class="op">=</span><span class="va">False</span>, xlabel<span class="op">=</span><span class="st">'Loan Amount Range'</span>, ylabel<span class="op">=</span><span class="st">'Num of Loans'</span>, figsize<span class="op">=</span>(<span class="dv">10</span>, <span class="dv">8</span>))</span>
-<span id="cb50-6"><a href="#cb50-6" aria-hidden="true" tabindex="-1"></a><span class="co">#loan_data_df.groupby(['verification_status']).agg(default_rate=('loan_status', lambda x: (x=='Charged Off').sum() / x.count())).plot.line(secondary_y='default_rate', ax=ax, color='r')</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb50-5"><a href="#cb50-5" aria-hidden="true" tabindex="-1"></a>                                        ).plot.bar(stacked<span class="op">=</span><span class="va">False</span>, xlabel<span class="op">=</span><span class="st">'Annual Income Range'</span>, ylabel<span class="op">=</span><span class="st">'Num of Loans'</span>, figsize<span class="op">=</span>(<span class="dv">10</span>, <span class="dv">8</span>))</span>
+<span id="cb50-6"><a href="#cb50-6" aria-hidden="true" tabindex="-1"></a><span class="co"># loan_data_df.groupby(['annual_inc_range']).agg(default_rate=('loan_status', lambda x: (x=='Charged Off').sum() / x.count())).plot.line(secondary_y='default_rate', ax=ax, color='r')</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <p><img src="CaseStudy_Loans_EDA_files/figure-html/cell-34-output-1.png" class="img-fluid"></p>
 </div>
