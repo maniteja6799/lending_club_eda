@@ -6,6 +6,8 @@ We are required to apply exploratory data analysis learnings and activities to c
 
 Our focus would be mostly on analyzing the risk of loans going bad (i.e. default) and corroborate or correct the conventional understanding about some financial data.
 
+The preformatted notebook would be available on the [project page](https://maniteja6799.github.io/lending_club_eda/Pawan_Mani_Teja_Kuppili.html)
+
 ## Table of Contents
 
   - [General Information](#general-information)
