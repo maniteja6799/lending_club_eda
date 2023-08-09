@@ -1,0 +1,1505 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.3.450">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>EDA on Lending Club dataset</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<script src="../site_libs/quarto-html/quarto.js"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" integrity="sha512-c3Nl8+7g4LMSTdrm621y7kf9v3SDPnhxLNhcjFJbKECVnmZHTdo+IRO05sNLTH/D3vA6u1X32ehoLC7WFVdheg==" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script>
+<script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
+
+
+</head>
+
+<body class="fullcontent">
+
+<div id="quarto-search-results"></div>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">EDA on Lending Club dataset</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+</header>
+
+<div class="cell" data-tags="[]" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np, pandas <span class="im">as</span> pd</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> re</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> seaborn <span class="im">as</span> sns</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-tags="[]" data-execution_count="2">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>pd.options.display.max_colwidth <span class="op">=</span> <span class="dv">200</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<section id="load-data" class="level2">
+<h2 class="anchored" data-anchor-id="load-data">Load Data</h2>
+<div class="cell" data-scrolled="true" data-tags="[]" data-execution_count="3">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>loan_data_df <span class="op">=</span> pd.read_csv(<span class="st">'loan.csv'</span>, low_memory<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>column_desc_df <span class="op">=</span> pd.read_excel(<span class="st">'Data_Dictionary.xlsx'</span>)</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>loan_data_df.info()</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>before_cols <span class="op">=</span> <span class="bu">len</span>(loan_data_df.columns)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>&lt;class 'pandas.core.frame.DataFrame'&gt;
+RangeIndex: 39717 entries, 0 to 39716
+Columns: 111 entries, id to total_il_high_credit_limit
+dtypes: float64(74), int64(13), object(24)
+memory usage: 33.6+ MB</code></pre>
+</div>
+</div>
+</section>
+<section id="data-cleanup" class="level2">
+<h2 class="anchored" data-anchor-id="data-cleanup">Data Cleanup</h2>
+<section id="finding-columns-having-all-null-or-90-null-data" class="level3">
+<h3 class="anchored" data-anchor-id="finding-columns-having-all-null-or-90-null-data">Finding Columns having all Null or 90% Null data</h3>
+<p>#### All Columns having 90% or more Null data</p>
+<p><strong>Note:</strong> Following list will be the superset of previous list.</p>
+<div class="cell" data-tags="[]" data-execution_count="4">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>atleast_90pct_empty <span class="op">=</span> loan_data_df.columns[<span class="op">~</span>(loan_data_df.isnull().<span class="bu">sum</span>(axis<span class="op">=</span><span class="dv">0</span>) <span class="op">&lt;=</span> loan_data_df.shape[<span class="dv">0</span>] <span class="op">*</span> <span class="fl">0.9</span>)].tolist()</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Columns with atleast 90% of empty columns are : </span><span class="sc">{</span><span class="bu">len</span>(atleast_90pct_empty)<span class="sc">}</span><span class="ch">\n</span><span class="ss">"</span>)</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(atleast_90pct_empty)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Columns with atleast 90% of empty columns are : 56
+
+['mths_since_last_record', 'next_pymnt_d', 'mths_since_last_major_derog', 'annual_inc_joint', 'dti_joint', 'verification_status_joint', 'tot_coll_amt', 'tot_cur_bal', 'open_acc_6m', 'open_il_6m', 'open_il_12m', 'open_il_24m', 'mths_since_rcnt_il', 'total_bal_il', 'il_util', 'open_rv_12m', 'open_rv_24m', 'max_bal_bc', 'all_util', 'total_rev_hi_lim', 'inq_fi', 'total_cu_tl', 'inq_last_12m', 'acc_open_past_24mths', 'avg_cur_bal', 'bc_open_to_buy', 'bc_util', 'mo_sin_old_il_acct', 'mo_sin_old_rev_tl_op', 'mo_sin_rcnt_rev_tl_op', 'mo_sin_rcnt_tl', 'mort_acc', 'mths_since_recent_bc', 'mths_since_recent_bc_dlq', 'mths_since_recent_inq', 'mths_since_recent_revol_delinq', 'num_accts_ever_120_pd', 'num_actv_bc_tl', 'num_actv_rev_tl', 'num_bc_sats', 'num_bc_tl', 'num_il_tl', 'num_op_rev_tl', 'num_rev_accts', 'num_rev_tl_bal_gt_0', 'num_sats', 'num_tl_120dpd_2m', 'num_tl_30dpd', 'num_tl_90g_dpd_24m', 'num_tl_op_past_12m', 'pct_tl_nvr_dlq', 'percent_bc_gt_75', 'tot_hi_cred_lim', 'total_bal_ex_mort', 'total_bc_limit', 'total_il_high_credit_limit']</code></pre>
+</div>
+</div>
+<section id="columns-having-all-null" class="level4">
+<h4 class="anchored" data-anchor-id="columns-having-all-null">Columns having all Null</h4>
+<div class="cell" data-tags="[]" data-execution_count="5">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>all_empty_cols<span class="op">=</span> loan_data_df.columns[loan_data_df.isna().<span class="bu">all</span>()].tolist()</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Total number of all empty columns are : </span><span class="sc">{</span><span class="bu">len</span>(all_empty_cols)<span class="sc">}</span><span class="ch">\n</span><span class="ss">"</span>)</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(all_empty_cols)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Total number of all empty columns are : 54
+
+['mths_since_last_major_derog', 'annual_inc_joint', 'dti_joint', 'verification_status_joint', 'tot_coll_amt', 'tot_cur_bal', 'open_acc_6m', 'open_il_6m', 'open_il_12m', 'open_il_24m', 'mths_since_rcnt_il', 'total_bal_il', 'il_util', 'open_rv_12m', 'open_rv_24m', 'max_bal_bc', 'all_util', 'total_rev_hi_lim', 'inq_fi', 'total_cu_tl', 'inq_last_12m', 'acc_open_past_24mths', 'avg_cur_bal', 'bc_open_to_buy', 'bc_util', 'mo_sin_old_il_acct', 'mo_sin_old_rev_tl_op', 'mo_sin_rcnt_rev_tl_op', 'mo_sin_rcnt_tl', 'mort_acc', 'mths_since_recent_bc', 'mths_since_recent_bc_dlq', 'mths_since_recent_inq', 'mths_since_recent_revol_delinq', 'num_accts_ever_120_pd', 'num_actv_bc_tl', 'num_actv_rev_tl', 'num_bc_sats', 'num_bc_tl', 'num_il_tl', 'num_op_rev_tl', 'num_rev_accts', 'num_rev_tl_bal_gt_0', 'num_sats', 'num_tl_120dpd_2m', 'num_tl_30dpd', 'num_tl_90g_dpd_24m', 'num_tl_op_past_12m', 'pct_tl_nvr_dlq', 'percent_bc_gt_75', 'tot_hi_cred_lim', 'total_bal_ex_mort', 'total_bc_limit', 'total_il_high_credit_limit']</code></pre>
+</div>
+</div>
+</section>
+<section id="delete-all-or-90-empty-columns" class="level4">
+<h4 class="anchored" data-anchor-id="delete-all-or-90-empty-columns">Delete all or 90% empty columns</h4>
+<div class="cell" data-tags="[]" data-execution_count="6">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Remove all columns with null values</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>loan_data_df <span class="op">=</span> loan_data_df.dropna(axis<span class="op">=</span><span class="dv">1</span>, how<span class="op">=</span><span class="st">'all'</span>)</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Remove all columns with 90% null values</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>loan_data_df <span class="op">=</span> loan_data_df.loc[:, (loan_data_df.isnull().<span class="bu">sum</span>(axis<span class="op">=</span><span class="dv">0</span>) <span class="op">&lt;=</span> loan_data_df.shape[<span class="dv">0</span>] <span class="op">*</span> <span class="fl">0.9</span>)]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+</section>
+<section id="remove-columns-which-have-constant-as-a-value." class="level3">
+<h3 class="anchored" data-anchor-id="remove-columns-which-have-constant-as-a-value.">Remove columns which have constant as a value.</h3>
+<p>These will become metadata for the dataset because the dataset has only one value for them. eg. all values in column: pymnt_plan are <code>n</code>.</p>
+<div class="cell" data-tags="[]" data-execution_count="7">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>constant_cols_dict <span class="op">=</span> { c : loan_data_df[c].value_counts().index[<span class="dv">0</span>] <span class="cf">for</span> c <span class="kw">in</span> loan_data_df.columns <span class="cf">if</span> loan_data_df[c].value_counts().count() <span class="op">==</span> <span class="dv">1</span>} </span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Columns having constant values: </span><span class="sc">{</span>constant_cols_dict<span class="sc">}</span><span class="ch">\n</span><span class="ss">"</span>)</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Columns to be removed : </span><span class="sc">{</span>constant_cols_dict<span class="sc">.</span>keys()<span class="sc">}</span><span class="ch">\n</span><span class="ss">"</span>)</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>loan_data_df.drop(columns<span class="op">=</span>constant_cols_dict.keys(), inplace<span class="op">=</span><span class="va">True</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Columns having constant values: {'pymnt_plan': 'n', 'initial_list_status': 'f', 'collections_12_mths_ex_med': 0.0, 'policy_code': 1, 'application_type': 'INDIVIDUAL', 'acc_now_delinq': 0, 'chargeoff_within_12_mths': 0.0, 'delinq_amnt': 0, 'tax_liens': 0.0}
+
+Columns to be removed : dict_keys(['pymnt_plan', 'initial_list_status', 'collections_12_mths_ex_med', 'policy_code', 'application_type', 'acc_now_delinq', 'chargeoff_within_12_mths', 'delinq_amnt', 'tax_liens'])
+</code></pre>
+</div>
+</div>
+</section>
+<section id="inspect-and-remove-unwanted-columns" class="level3">
+<h3 class="anchored" data-anchor-id="inspect-and-remove-unwanted-columns">Inspect and remove unwanted columns</h3>
+<p>Some columns can be removed since they don’t give much use to the analysis</p>
+<div class="cell" data-tags="[]" data-execution_count="8">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"desc, purpose, title are similar - title and desc seem to be human added and have more distinct values. Purpose has a finite list and it alone can be looked at and drop desc and title."</span>)</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"</span><span class="ch">\n</span><span class="st">-------title-----------</span><span class="ch">\n</span><span class="st">"</span>, loan_data_df.title.value_counts().index, </span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>      <span class="co"># "\n-------desc----------\n", loan_data_df.desc.value_counts().index, # Too much data. skipping print</span></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>      <span class="st">"</span><span class="ch">\n</span><span class="st">-------purpose-----------</span><span class="ch">\n</span><span class="st">"</span>, loan_data_df.purpose.value_counts().index)</span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>cols_to_drop <span class="op">=</span> [<span class="st">'title'</span>, <span class="st">'desc'</span>]</span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"url column has external url for lending club, and not much use to analysys"</span>)</span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(loan_data_df.url.head())</span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>cols_to_drop.append(<span class="st">'url'</span>)</span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>loan_data_df.drop(columns<span class="op">=</span>cols_to_drop, inplace<span class="op">=</span><span class="va">True</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>desc, purpose, title are similar - title and desc seem to be human added and have more distinct values. Purpose has a finite list and it alone can be looked at and drop desc and title.
+
+-------title-----------
+ Index(['Debt Consolidation', 'Debt Consolidation Loan', 'Personal Loan',
+       'Consolidation', 'debt consolidation', 'Home Improvement',
+       'Credit Card Consolidation', 'Debt consolidation',
+       'Small Business Loan', 'Credit Card Loan',
+       ...
+       'GUNNER', 'Major Credit Card Consolidation',
+       'Debt consolidation at lower rate', 'Simplified Finances',
+       'Get those cards paid!', 'To Pay Off A High Interest Credit Card',
+       'Debt Reduction Loan', 'PAY MY CREDIT CARD ', 'Hate Wellsfargo ',
+       'Darren's Car'],
+      dtype='object', length=19615) 
+-------purpose-----------
+ Index(['debt_consolidation', 'credit_card', 'other', 'home_improvement',
+       'major_purchase', 'small_business', 'car', 'wedding', 'medical',
+       'moving', 'vacation', 'house', 'educational', 'renewable_energy'],
+      dtype='object')
+url column has external url for lending club, and not much use to analysys
+0    https://lendingclub.com/browse/loanDetail.action?loan_id=1077501
+1    https://lendingclub.com/browse/loanDetail.action?loan_id=1077430
+2    https://lendingclub.com/browse/loanDetail.action?loan_id=1077175
+3    https://lendingclub.com/browse/loanDetail.action?loan_id=1076863
+4    https://lendingclub.com/browse/loanDetail.action?loan_id=1075358
+Name: url, dtype: object</code></pre>
+</div>
+</div>
+<section id="dataset-after-removed-columns" class="level4">
+<h4 class="anchored" data-anchor-id="dataset-after-removed-columns">Dataset after removed columns</h4>
+<div class="cell" data-tags="[]" data-execution_count="9">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"The no. columns are reduced from </span><span class="sc">{</span>before_cols<span class="sc">}</span><span class="ss"> to </span><span class="sc">{</span><span class="bu">len</span>(loan_data_df.columns)<span class="sc">}</span><span class="ss">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>The no. columns are reduced from 111 to 43</code></pre>
+</div>
+</div>
+<div class="cell" data-tags="[]" data-execution_count="10">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>loan_data_df.info()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>&lt;class 'pandas.core.frame.DataFrame'&gt;
+RangeIndex: 39717 entries, 0 to 39716
+Data columns (total 43 columns):
+ #   Column                   Non-Null Count  Dtype  
+---  ------                   --------------  -----  
+ 0   id                       39717 non-null  int64  
+ 1   member_id                39717 non-null  int64  
+ 2   loan_amnt                39717 non-null  int64  
+ 3   funded_amnt              39717 non-null  int64  
+ 4   funded_amnt_inv          39717 non-null  float64
+ 5   term                     39717 non-null  object 
+ 6   int_rate                 39717 non-null  object 
+ 7   installment              39717 non-null  float64
+ 8   grade                    39717 non-null  object 
+ 9   sub_grade                39717 non-null  object 
+ 10  emp_title                37258 non-null  object 
+ 11  emp_length               38642 non-null  object 
+ 12  home_ownership           39717 non-null  object 
+ 13  annual_inc               39717 non-null  float64
+ 14  verification_status      39717 non-null  object 
+ 15  issue_d                  39717 non-null  object 
+ 16  loan_status              39717 non-null  object 
+ 17  purpose                  39717 non-null  object 
+ 18  zip_code                 39717 non-null  object 
+ 19  addr_state               39717 non-null  object 
+ 20  dti                      39717 non-null  float64
+ 21  delinq_2yrs              39717 non-null  int64  
+ 22  earliest_cr_line         39717 non-null  object 
+ 23  inq_last_6mths           39717 non-null  int64  
+ 24  mths_since_last_delinq   14035 non-null  float64
+ 25  open_acc                 39717 non-null  int64  
+ 26  pub_rec                  39717 non-null  int64  
+ 27  revol_bal                39717 non-null  int64  
+ 28  revol_util               39667 non-null  object 
+ 29  total_acc                39717 non-null  int64  
+ 30  out_prncp                39717 non-null  float64
+ 31  out_prncp_inv            39717 non-null  float64
+ 32  total_pymnt              39717 non-null  float64
+ 33  total_pymnt_inv          39717 non-null  float64
+ 34  total_rec_prncp          39717 non-null  float64
+ 35  total_rec_int            39717 non-null  float64
+ 36  total_rec_late_fee       39717 non-null  float64
+ 37  recoveries               39717 non-null  float64
+ 38  collection_recovery_fee  39717 non-null  float64
+ 39  last_pymnt_d             39646 non-null  object 
+ 40  last_pymnt_amnt          39717 non-null  float64
+ 41  last_credit_pull_d       39715 non-null  object 
+ 42  pub_rec_bankruptcies     39020 non-null  float64
+dtypes: float64(16), int64(10), object(17)
+memory usage: 13.0+ MB</code></pre>
+</div>
+</div>
+<div class="cell" data-tags="[]" data-execution_count="11">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>loan_data_df.head(<span class="dv">5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="11">
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">id</th>
+<th data-quarto-table-cell-role="th">member_id</th>
+<th data-quarto-table-cell-role="th">loan_amnt</th>
+<th data-quarto-table-cell-role="th">funded_amnt</th>
+<th data-quarto-table-cell-role="th">funded_amnt_inv</th>
+<th data-quarto-table-cell-role="th">term</th>
+<th data-quarto-table-cell-role="th">int_rate</th>
+<th data-quarto-table-cell-role="th">installment</th>
+<th data-quarto-table-cell-role="th">grade</th>
+<th data-quarto-table-cell-role="th">sub_grade</th>
+<th data-quarto-table-cell-role="th">...</th>
+<th data-quarto-table-cell-role="th">total_pymnt_inv</th>
+<th data-quarto-table-cell-role="th">total_rec_prncp</th>
+<th data-quarto-table-cell-role="th">total_rec_int</th>
+<th data-quarto-table-cell-role="th">total_rec_late_fee</th>
+<th data-quarto-table-cell-role="th">recoveries</th>
+<th data-quarto-table-cell-role="th">collection_recovery_fee</th>
+<th data-quarto-table-cell-role="th">last_pymnt_d</th>
+<th data-quarto-table-cell-role="th">last_pymnt_amnt</th>
+<th data-quarto-table-cell-role="th">last_credit_pull_d</th>
+<th data-quarto-table-cell-role="th">pub_rec_bankruptcies</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">0</td>
+<td>1077501</td>
+<td>1296599</td>
+<td>5000</td>
+<td>5000</td>
+<td>4975.0</td>
+<td>36 months</td>
+<td>10.65%</td>
+<td>162.87</td>
+<td>B</td>
+<td>B2</td>
+<td>...</td>
+<td>5833.84</td>
+<td>5000.00</td>
+<td>863.16</td>
+<td>0.00</td>
+<td>0.00</td>
+<td>0.00</td>
+<td>Jan-15</td>
+<td>171.62</td>
+<td>May-16</td>
+<td>0.0</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1</td>
+<td>1077430</td>
+<td>1314167</td>
+<td>2500</td>
+<td>2500</td>
+<td>2500.0</td>
+<td>60 months</td>
+<td>15.27%</td>
+<td>59.83</td>
+<td>C</td>
+<td>C4</td>
+<td>...</td>
+<td>1008.71</td>
+<td>456.46</td>
+<td>435.17</td>
+<td>0.00</td>
+<td>117.08</td>
+<td>1.11</td>
+<td>Apr-13</td>
+<td>119.66</td>
+<td>Sep-13</td>
+<td>0.0</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2</td>
+<td>1077175</td>
+<td>1313524</td>
+<td>2400</td>
+<td>2400</td>
+<td>2400.0</td>
+<td>36 months</td>
+<td>15.96%</td>
+<td>84.33</td>
+<td>C</td>
+<td>C5</td>
+<td>...</td>
+<td>3005.67</td>
+<td>2400.00</td>
+<td>605.67</td>
+<td>0.00</td>
+<td>0.00</td>
+<td>0.00</td>
+<td>Jun-14</td>
+<td>649.91</td>
+<td>May-16</td>
+<td>0.0</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">3</td>
+<td>1076863</td>
+<td>1277178</td>
+<td>10000</td>
+<td>10000</td>
+<td>10000.0</td>
+<td>36 months</td>
+<td>13.49%</td>
+<td>339.31</td>
+<td>C</td>
+<td>C1</td>
+<td>...</td>
+<td>12231.89</td>
+<td>10000.00</td>
+<td>2214.92</td>
+<td>16.97</td>
+<td>0.00</td>
+<td>0.00</td>
+<td>Jan-15</td>
+<td>357.48</td>
+<td>Apr-16</td>
+<td>0.0</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">4</td>
+<td>1075358</td>
+<td>1311748</td>
+<td>3000</td>
+<td>3000</td>
+<td>3000.0</td>
+<td>60 months</td>
+<td>12.69%</td>
+<td>67.79</td>
+<td>B</td>
+<td>B5</td>
+<td>...</td>
+<td>3513.33</td>
+<td>2475.94</td>
+<td>1037.39</td>
+<td>0.00</td>
+<td>0.00</td>
+<td>0.00</td>
+<td>May-16</td>
+<td>67.79</td>
+<td>May-16</td>
+<td>0.0</td>
+</tr>
+</tbody>
+</table>
+
+<p>5 rows × 43 columns</p>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="convert-the-columns-to-correct-datatypes" class="level3">
+<h3 class="anchored" data-anchor-id="convert-the-columns-to-correct-datatypes">Convert the columns to correct datatypes</h3>
+<div class="cell" data-tags="[]" data-execution_count="12">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> datetime <span class="im">import</span> date, datetime</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> convert_emp_length(l):</span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> pd.isna(l):</span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> np.nan</span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>    <span class="cf">elif</span> l <span class="op">==</span> <span class="st">'&lt; 1 year'</span>:</span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="dv">0</span></span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a>    <span class="cf">elif</span> l <span class="op">==</span> <span class="st">'10+ years'</span>:</span>
+<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="dv">10</span></span>
+<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a>    <span class="cf">else</span>:</span>
+<span id="cb19-10"><a href="#cb19-10" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="bu">int</span>(<span class="bu">str</span>(l)[<span class="dv">0</span>])</span>
+<span id="cb19-11"><a href="#cb19-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-12"><a href="#cb19-12" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> convert_period_to_date(p):</span>
+<span id="cb19-13"><a href="#cb19-13" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="bu">type</span>(p) <span class="op">==</span> datetime:</span>
+<span id="cb19-14"><a href="#cb19-14" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> p</span>
+<span id="cb19-15"><a href="#cb19-15" aria-hidden="true" tabindex="-1"></a>    period_parts <span class="op">=</span> p.split(<span class="st">'-'</span>)</span>
+<span id="cb19-16"><a href="#cb19-16" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> datetime( <span class="bu">int</span>(<span class="ss">f"19</span><span class="sc">{</span>period_parts[<span class="dv">1</span>]<span class="sc">}</span><span class="ss">"</span> <span class="cf">if</span> <span class="bu">int</span>(period_parts[<span class="dv">1</span>]) <span class="op">&gt;</span> <span class="dv">30</span> <span class="cf">else</span> <span class="ss">f"20</span><span class="sc">{</span>period_parts[<span class="dv">1</span>]<span class="sc">}</span><span class="ss">"</span>) ,  datetime.strptime(period_parts[<span class="dv">0</span>],<span class="st">'%b'</span>).month, <span class="dv">1</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-tags="[]" data-execution_count="13">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="co"># numbers</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>loan_data_df.term               <span class="op">=</span> loan_data_df.term.<span class="bu">apply</span>(<span class="kw">lambda</span> x: <span class="bu">int</span>(<span class="bu">str</span>(x)[:<span class="dv">3</span>]))</span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>loan_data_df.emp_length         <span class="op">=</span> loan_data_df.emp_length.<span class="bu">apply</span>(convert_emp_length) </span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a><span class="co"># percentages</span></span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>loan_data_df.int_rate           <span class="op">=</span> loan_data_df.int_rate.<span class="bu">apply</span>(<span class="kw">lambda</span> x: <span class="bu">float</span>(<span class="bu">str</span>(x)[:<span class="op">-</span><span class="dv">1</span>])<span class="op">/</span><span class="dv">100</span>)</span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>loan_data_df.revol_util         <span class="op">=</span> loan_data_df.revol_util.<span class="bu">apply</span>(<span class="kw">lambda</span> x: (<span class="bu">float</span>(<span class="bu">str</span>(x)[:<span class="op">-</span><span class="dv">1</span>])<span class="op">/</span><span class="dv">100</span>) <span class="cf">if</span> <span class="bu">str</span>(x) <span class="op">!=</span> <span class="st">'nan'</span> <span class="cf">else</span> x)</span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a><span class="co"># dates</span></span>
+<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a>loan_data_df.issue_d            <span class="op">=</span> pd.to_datetime(loan_data_df.issue_d, <span class="bu">format</span><span class="op">=</span><span class="st">'%b-%y'</span>)</span>
+<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a>loan_data_df.last_pymnt_d       <span class="op">=</span> pd.to_datetime(loan_data_df.last_pymnt_d, <span class="bu">format</span><span class="op">=</span><span class="st">'%b-%y'</span>)</span>
+<span id="cb20-10"><a href="#cb20-10" aria-hidden="true" tabindex="-1"></a>loan_data_df.last_credit_pull_d <span class="op">=</span> pd.to_datetime(loan_data_df.last_credit_pull_d, <span class="bu">format</span><span class="op">=</span><span class="st">'%b-%y'</span>)</span>
+<span id="cb20-11"><a href="#cb20-11" aria-hidden="true" tabindex="-1"></a><span class="co"># only years 69-99 will be added with 20th century(19xx) padding in python</span></span>
+<span id="cb20-12"><a href="#cb20-12" aria-hidden="true" tabindex="-1"></a><span class="co"># ref: https://docs.python.org/3/library/time.html#:~:text=values%2069%E2%80%9399%20are%20mapped%20to%201969%E2%80%931999%2C%20and%20values%200%E2%80%9368%20are%20mapped%20to%202000%E2%80%932068.</span></span>
+<span id="cb20-13"><a href="#cb20-13" aria-hidden="true" tabindex="-1"></a>loan_data_df.earliest_cr_line   <span class="op">=</span> loan_data_df.earliest_cr_line.<span class="bu">apply</span>(convert_period_to_date) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="removeadd-value-to-rows-with-null-values-in-certain-columns" class="level3">
+<h3 class="anchored" data-anchor-id="removeadd-value-to-rows-with-null-values-in-certain-columns">Remove/add value to rows with null values in certain columns</h3>
+<div class="cell" data-tags="[]" data-execution_count="14">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>loan_data_df.isna().<span class="bu">sum</span>()[loan_data_df.isna().<span class="bu">sum</span>() <span class="op">&gt;</span> <span class="dv">0</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="14">
+<pre><code>emp_title                  2459
+emp_length                 1075
+mths_since_last_delinq    25682
+revol_util                   50
+last_pymnt_d                 71
+last_credit_pull_d            2
+pub_rec_bankruptcies        697
+dtype: int64</code></pre>
+</div>
+</div>
+<p>Remove rows with very few (&lt;100) NaNs</p>
+<div class="cell" data-tags="[]" data-execution_count="15">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>cols_with_few_nan_rows <span class="op">=</span> <span class="bu">list</span>(loan_data_df.isna().<span class="bu">sum</span>()[(loan_data_df.isna().<span class="bu">sum</span>() <span class="op">&lt;</span> <span class="dv">700</span>) <span class="op">&amp;</span> (loan_data_df.isna().<span class="bu">sum</span>() <span class="op">&gt;</span> <span class="dv">0</span>)].index)</span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> col <span class="kw">in</span> cols_with_few_nan_rows:</span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>    loan_data_df.drop(loan_data_df[loan_data_df[col].isna()].index, inplace<span class="op">=</span><span class="va">True</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>The borrowers who have not been delinquated forever, we are setting higher value than the max avialable in dataset.</p>
+<div class="cell" data-scrolled="true" data-tags="[]" data-execution_count="16">
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>loan_data_df.mths_since_last_delinq.fillna(value<span class="op">=</span><span class="dv">1000</span>, inplace<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>loan_data_df.mths_since_last_delinq.value_counts()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="16">
+<pre><code>1000.0    25594
+30.0        245
+23.0        241
+15.0        241
+24.0        235
+          ...  
+85.0          1
+89.0          1
+106.0         1
+115.0         1
+96.0          1
+Name: mths_since_last_delinq, Length: 96, dtype: int64</code></pre>
+</div>
+</div>
+<p>The borrowers who do not have employment length are missing values. We are deleting those rows.</p>
+<div class="cell" data-scrolled="true" data-tags="[]" data-execution_count="17">
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>loan_data_df.drop(loan_data_df[loan_data_df[<span class="st">'emp_length'</span>].isna()].index, inplace<span class="op">=</span><span class="va">True</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-scrolled="true" data-tags="[]" data-execution_count="18">
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Columns with non-zero NaN values left:"</span>)</span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>loan_data_df.isna().<span class="bu">sum</span>()[loan_data_df.isna().<span class="bu">sum</span>() <span class="op">&gt;</span> <span class="dv">0</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Columns with non-zero NaN values left:</code></pre>
+</div>
+<div class="cell-output cell-output-display" data-execution_count="18">
+<pre><code>emp_title    1393
+dtype: int64</code></pre>
+</div>
+</div>
+</section>
+</section>
+<section id="derived-metrics" class="level2">
+<h2 class="anchored" data-anchor-id="derived-metrics">Derived Metrics</h2>
+<div class="cell" data-tags="[]" data-execution_count="19">
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Ratio of installment to monthly income</span></span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>loan_data_df[<span class="st">'installment_to_month_inc'</span>] <span class="op">=</span> pd.cut(loan_data_df[<span class="st">'installment'</span>] <span class="op">/</span> (loan_data_df[<span class="st">'annual_inc'</span>]<span class="op">/</span><span class="dv">12</span>), bins<span class="op">=</span>np.linspace(<span class="dv">0</span>,<span class="fl">0.3</span>,<span class="dv">15</span>)) </span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Ratio of open acc to total acc</span></span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a>loan_data_df[<span class="st">'open_to_total_acc'</span>] <span class="op">=</span> pd.cut(loan_data_df[<span class="st">'open_acc'</span>] <span class="op">/</span> loan_data_df[<span class="st">'total_acc'</span>], bins<span class="op">=</span>np.linspace(<span class="dv">0</span>,<span class="dv">1</span>,<span class="dv">11</span>))</span>
+<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Representing loan_status as a numeric value</span></span>
+<span id="cb30-6"><a href="#cb30-6" aria-hidden="true" tabindex="-1"></a>loan_data_df[<span class="st">'loan_status_n'</span>] <span class="op">=</span> loan_data_df[<span class="st">'loan_status'</span>].<span class="bu">map</span>({<span class="st">'Charged Off'</span>: <span class="op">-</span><span class="dv">1</span>, <span class="st">'Fully Paid'</span>: <span class="dv">1</span>, <span class="st">'Current'</span>: <span class="dv">0</span>})</span>
+<span id="cb30-7"><a href="#cb30-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-8"><a href="#cb30-8" aria-hidden="true" tabindex="-1"></a><span class="co">### Categorising Annual income, loan_amount, interest_rate</span></span>
+<span id="cb30-9"><a href="#cb30-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-10"><a href="#cb30-10" aria-hidden="true" tabindex="-1"></a>loan_data_df[<span class="st">'annual_inc_range'</span>] <span class="op">=</span> pd.cut(loan_data_df.annual_inc, </span>
+<span id="cb30-11"><a href="#cb30-11" aria-hidden="true" tabindex="-1"></a>                                          bins<span class="op">=</span>[<span class="dv">1000</span>, <span class="dv">10000</span>, <span class="dv">50000</span>, <span class="dv">100000</span>, <span class="dv">500000</span>, <span class="dv">1000000</span>, <span class="dv">10000000</span>], </span>
+<span id="cb30-12"><a href="#cb30-12" aria-hidden="true" tabindex="-1"></a>                                          labels<span class="op">=</span>[<span class="st">'below 10k'</span>,<span class="st">'10k-50k'</span>,<span class="st">'50k-100k'</span>,<span class="st">'100k-500k'</span>, <span class="st">'500k-1M'</span>, <span class="st">'1M+'</span>])</span>
+<span id="cb30-13"><a href="#cb30-13" aria-hidden="true" tabindex="-1"></a>loan_data_df[<span class="st">'loan_amnt_range'</span>]  <span class="op">=</span> pd.cut(loan_data_df.loan_amnt, </span>
+<span id="cb30-14"><a href="#cb30-14" aria-hidden="true" tabindex="-1"></a>                                          bins<span class="op">=</span>[<span class="dv">100</span>, <span class="dv">1000</span>, <span class="dv">5000</span>, <span class="dv">10000</span>, <span class="dv">25000</span>, <span class="dv">50000</span>], </span>
+<span id="cb30-15"><a href="#cb30-15" aria-hidden="true" tabindex="-1"></a>                                          labels<span class="op">=</span>[<span class="st">'below 1k'</span>,<span class="st">'1k-5k'</span>,<span class="st">'5k-10k'</span>,<span class="st">'10k-25k'</span>, <span class="st">'25k+'</span>])</span>
+<span id="cb30-16"><a href="#cb30-16" aria-hidden="true" tabindex="-1"></a>loan_data_df[<span class="st">'int_rate_range'</span>]   <span class="op">=</span> pd.cut(loan_data_df.int_rate, </span>
+<span id="cb30-17"><a href="#cb30-17" aria-hidden="true" tabindex="-1"></a>                                          bins<span class="op">=</span>[<span class="dv">0</span>, <span class="fl">0.07</span>, <span class="fl">0.14</span>, <span class="fl">0.21</span>, <span class="fl">0.3</span>], </span>
+<span id="cb30-18"><a href="#cb30-18" aria-hidden="true" tabindex="-1"></a>                                          labels<span class="op">=</span>[<span class="st">'below 7%'</span>,<span class="st">'7-14%'</span>,<span class="st">'14-21%'</span>,<span class="st">'21+%'</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<section id="final-data-dictionary" class="level3">
+<h3 class="anchored" data-anchor-id="final-data-dictionary">Final Data Dictionary</h3>
+<div class="cell" data-tags="[]" data-execution_count="20">
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>column_desc_df <span class="op">=</span> column_desc_df[column_desc_df.LoanStatNew.isin(loan_data_df.columns)]</span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>column_desc_df.reset_index(inplace<span class="op">=</span><span class="va">True</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-tags="[]" data-execution_count="21">
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>column_desc_df.loc[:, [<span class="st">'LoanStatNew'</span>, <span class="st">'Description'</span>]]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="21">
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">LoanStatNew</th>
+<th data-quarto-table-cell-role="th">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">0</td>
+<td>addr_state</td>
+<td>The state provided by the borrower in the loan application</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1</td>
+<td>annual_inc</td>
+<td>The self-reported annual income provided by the borrower during registration.</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2</td>
+<td>collection_recovery_fee</td>
+<td>post charge off collection fee</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">3</td>
+<td>delinq_2yrs</td>
+<td>The number of 30+ days past-due incidences of delinquency in the borrower's credit file for the past 2 years. This would show the irregular behavior in paying back</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">4</td>
+<td>dti</td>
+<td>A ratio (lower is better) calculated using the borrower’s total monthly debt payments on the total debt obligations, excluding mortgage and the requested LC loan, divided by the borrower’s self-re...</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">5</td>
+<td>earliest_cr_line</td>
+<td>The month the borrower's earliest reported credit line was opened</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">6</td>
+<td>emp_length</td>
+<td>Employment length in years. Possible values are between 0 and 10 where 0 means less than one year and 10 means ten or more years.</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">7</td>
+<td>emp_title</td>
+<td>The job title supplied by the Borrower when applying for the loan.*</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">8</td>
+<td>funded_amnt</td>
+<td>The total amount committed to that loan at that point in time.</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">9</td>
+<td>funded_amnt_inv</td>
+<td>The total amount committed by investors for that loan at that point in time.</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">10</td>
+<td>grade</td>
+<td>LC assigned loan grade</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">11</td>
+<td>home_ownership</td>
+<td>The home ownership status provided by the borrower during registration. Our values are: RENT, OWN, MORTGAGE, OTHER.</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">12</td>
+<td>id</td>
+<td>A unique LC assigned ID for the loan listing.</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">13</td>
+<td>inq_last_6mths</td>
+<td>The number of inquiries in past 6 months (excluding auto and mortgage inquiries), increased inquiry would mean the person is shopping around for loan and possibly getting rejections</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">14</td>
+<td>installment</td>
+<td>The monthly payment owed by the borrower if the loan originates.</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">15</td>
+<td>int_rate</td>
+<td>Interest Rate on the loan Would high interest rate have impact on loan repayment status, candidate for univariate analysis.</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">16</td>
+<td>issue_d</td>
+<td>The month which the loan was funded</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">17</td>
+<td>last_credit_pull_d</td>
+<td>The most recent month LC pulled credit for this loan</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">18</td>
+<td>last_pymnt_amnt</td>
+<td>Last total payment amount received</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">19</td>
+<td>last_pymnt_d</td>
+<td>Last month payment was received</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">20</td>
+<td>loan_amnt</td>
+<td>The listed amount of the loan applied for by the borrower. If at some point in time, the credit department reduces the loan amount, then it will be reflected in this value.</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">21</td>
+<td>loan_status</td>
+<td>Current status of the loan</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">22</td>
+<td>member_id</td>
+<td>A unique LC assigned Id for the borrower member.</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">23</td>
+<td>mths_since_last_delinq</td>
+<td>The number of months since the borrower's last delinquency. NA is good, and then higher the value is better then lower value, it shows the stability of credit profile.</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">24</td>
+<td>open_acc</td>
+<td>The number of open credit lines in the borrower's credit file. More credit lines would show the behavior of taking larger liabilities, which may or may not good, need to correlate with loan status...</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">25</td>
+<td>out_prncp</td>
+<td>Remaining outstanding principal for total amount funded</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">26</td>
+<td>out_prncp_inv</td>
+<td>Remaining outstanding principal for portion of total amount funded by investors</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">27</td>
+<td>pub_rec</td>
+<td>Number of derogatory public records, NA is good, but higher the number then lower the credit rating for the person. It shows that person is meticulous in payments.</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">28</td>
+<td>pub_rec_bankruptcies</td>
+<td>Number of public record bankruptcies, NA is good, but higher bankruptcies mean the person often does not have capacity to pay and may have erratic income sources.</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">29</td>
+<td>purpose</td>
+<td>A category provided by the borrower for the loan request. Purpose can be a good candidate for segmented univeriate analysis.</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">30</td>
+<td>recoveries</td>
+<td>post charge off gross recovery</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">31</td>
+<td>revol_bal</td>
+<td>Total credit revolving balance. This is basically rollover credit balance (basically paying your credit card bill partially or no payment). Higher the amount is bad.</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">32</td>
+<td>revol_util</td>
+<td>Revolving line utilization rate, or the amount of credit the borrower is using relative to all available revolving credit. The utilization ratio, lower is better. Good candidate for segmented univ...</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">33</td>
+<td>sub_grade</td>
+<td>LC assigned loan subgrade</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">34</td>
+<td>term</td>
+<td>The number of payments on the loan. Values are in months and can be either 36 or 60.</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">35</td>
+<td>total_acc</td>
+<td>The total number of credit lines currently in the borrower's credit file</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">36</td>
+<td>total_pymnt</td>
+<td>Payments received to date for total amount funded</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">37</td>
+<td>total_pymnt_inv</td>
+<td>Payments received to date for portion of total amount funded by investors</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">38</td>
+<td>total_rec_int</td>
+<td>Interest received to date</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">39</td>
+<td>total_rec_late_fee</td>
+<td>Late fees received to date</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">40</td>
+<td>total_rec_prncp</td>
+<td>Principal received to date</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">41</td>
+<td>verification_status</td>
+<td>Indicates if income was verified by LC, not verified, or if the income source was verified</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">42</td>
+<td>zip_code</td>
+<td>The first 3 numbers of the zip code provided by the borrower in the loan application.</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="find-and-remove-outliers" class="level2">
+<h2 class="anchored" data-anchor-id="find-and-remove-outliers">Find and remove outliers</h2>
+<div class="cell" data-tags="[]" data-execution_count="22">
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>plt.subplot(<span class="dv">2</span>, <span class="dv">2</span>, <span class="dv">1</span>)</span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>plt.subplot(<span class="dv">2</span>, <span class="dv">2</span>, <span class="dv">1</span>).set_title(<span class="st">'Annual income'</span>)</span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a>plt.boxplot(loan_data_df.annual_inc)</span>
+<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-5"><a href="#cb33-5" aria-hidden="true" tabindex="-1"></a>plt.subplot(<span class="dv">2</span>, <span class="dv">2</span>, <span class="dv">2</span>)</span>
+<span id="cb33-6"><a href="#cb33-6" aria-hidden="true" tabindex="-1"></a>plt.subplot(<span class="dv">2</span>, <span class="dv">2</span>, <span class="dv">2</span>).set_title(<span class="st">'Annual income &lt; 98</span><span class="sc">%i</span><span class="st">le'</span>)</span>
+<span id="cb33-7"><a href="#cb33-7" aria-hidden="true" tabindex="-1"></a>plt.boxplot(loan_data_df.annual_inc[loan_data_df.annual_inc <span class="op">&lt;</span> loan_data_df.annual_inc.quantile(<span class="fl">0.98</span>)])</span>
+<span id="cb33-8"><a href="#cb33-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-9"><a href="#cb33-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-10"><a href="#cb33-10" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"[Annual Income] Rows &lt;99</span><span class="sc">%%</span><span class="st">ile(</span><span class="sc">%.2f</span><span class="st">): </span><span class="sc">%d</span><span class="st">"</span> <span class="op">%</span> (loan_data_df.annual_inc.quantile(<span class="fl">0.98</span>), (loan_data_df.annual_inc <span class="op">&lt;</span> loan_data_df.annual_inc.quantile(<span class="fl">0.98</span>)).<span class="bu">sum</span>()))</span>
+<span id="cb33-11"><a href="#cb33-11" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"[Annual Income] Rows &lt; 2M$: </span><span class="sc">%d</span><span class="st">"</span> <span class="op">%</span> ((loan_data_df.annual_inc <span class="op">&lt;</span> <span class="dv">2000000</span>).<span class="bu">sum</span>()))</span>
+<span id="cb33-12"><a href="#cb33-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-13"><a href="#cb33-13" aria-hidden="true" tabindex="-1"></a>plt.subplot(<span class="dv">2</span>, <span class="dv">2</span>, <span class="dv">3</span>)</span>
+<span id="cb33-14"><a href="#cb33-14" aria-hidden="true" tabindex="-1"></a>plt.subplot(<span class="dv">2</span>, <span class="dv">2</span>, <span class="dv">3</span>).set_title(<span class="st">'Loan Amount - Box plot'</span>)</span>
+<span id="cb33-15"><a href="#cb33-15" aria-hidden="true" tabindex="-1"></a>plt.boxplot(loan_data_df.loan_amnt)</span>
+<span id="cb33-16"><a href="#cb33-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-17"><a href="#cb33-17" aria-hidden="true" tabindex="-1"></a>plt.subplot(<span class="dv">2</span>, <span class="dv">2</span>, <span class="dv">4</span>)</span>
+<span id="cb33-18"><a href="#cb33-18" aria-hidden="true" tabindex="-1"></a>plt.subplot(<span class="dv">2</span>, <span class="dv">2</span>, <span class="dv">4</span>).set_title(<span class="st">'Loan Amount - Histogram'</span>)</span>
+<span id="cb33-19"><a href="#cb33-19" aria-hidden="true" tabindex="-1"></a>plt.hist(loan_data_df.loan_amnt, rwidth<span class="op">=</span><span class="fl">0.8</span>)</span>
+<span id="cb33-20"><a href="#cb33-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-21"><a href="#cb33-21" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"[Loan Amount] Rows &lt;98</span><span class="sc">%%</span><span class="st">ile(</span><span class="sc">%.2f</span><span class="st">): </span><span class="sc">%d</span><span class="st">"</span> <span class="op">%</span> (loan_data_df.loan_amnt.quantile(<span class="fl">0.98</span>), (loan_data_df.loan_amnt <span class="op">&lt;</span> loan_data_df.loan_amnt.quantile(<span class="fl">0.98</span>)).<span class="bu">sum</span>()))</span>
+<span id="cb33-22"><a href="#cb33-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-23"><a href="#cb33-23" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"LoanAmount &lt; 98</span><span class="sc">%%</span><span class="st">ile and Annual income &lt; 98</span><span class="sc">%%</span><span class="st">ile: num of rows: </span><span class="sc">%d</span><span class="st">"</span> <span class="op">%</span> (loan_data_df[(loan_data_df.loan_amnt <span class="op">&lt;</span> loan_data_df.loan_amnt.quantile(<span class="fl">0.98</span>)) <span class="op">&amp;</span></span>
+<span id="cb33-24"><a href="#cb33-24" aria-hidden="true" tabindex="-1"></a>                                                                                        (loan_data_df.annual_inc <span class="op">&lt;</span> loan_data_df.annual_inc.quantile(<span class="fl">0.98</span>))].shape[<span class="dv">0</span>]))</span>
+<span id="cb33-25"><a href="#cb33-25" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f" total rows: </span><span class="sc">{</span>loan_data_df<span class="sc">.</span>shape[<span class="dv">0</span>]<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb33-26"><a href="#cb33-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-27"><a href="#cb33-27" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[Annual Income] Rows &lt;99%ile(189000.00): 37075
+[Annual Income] Rows &lt; 2M$: 37833
+[Loan Amount] Rows &lt;98%ile(32000.00): 37067
+LoanAmount &lt; 98%ile and Annual income &lt; 98%ile: num of rows: 36409
+ total rows: 37835</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<p><img src="CaseStudy_Loans_EDA-scratchone_files/figure-html/cell-23-output-2.png" class="img-fluid"></p>
+</div>
+</div>
+<p>There is a clear gap in annual income for entries above 2M\$ with just two entries at 4M\$ and 6M\$ respectively. We can ignore those After removing rows that have outliers from above, we get below:</p>
+<div class="cell" data-tags="[]" data-execution_count="23">
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>loan_data_df <span class="op">=</span> loan_data_df[loan_data_df.annual_inc <span class="op">&lt;</span> <span class="dv">2000000</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="analyze-columns-of-interest" class="level2">
+<h2 class="anchored" data-anchor-id="analyze-columns-of-interest">Analyze columns of interest</h2>
+<section id="find-relation-between-all-money-columns" class="level3">
+<h3 class="anchored" data-anchor-id="find-relation-between-all-money-columns">Find relation between all money columns</h3>
+<div class="cell" data-tags="[]" data-execution_count="24">
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>c <span class="op">=</span> loan_data_df[[<span class="st">'loan_amnt'</span>, <span class="st">'funded_amnt'</span>, <span class="st">'funded_amnt_inv'</span>, <span class="st">'installment'</span>, <span class="st">'total_pymnt'</span>, <span class="st">'total_pymnt_inv'</span>, <span class="st">'total_rec_prncp'</span>, <span class="st">'total_rec_int'</span>, </span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>                  <span class="st">'out_prncp'</span>, <span class="st">'out_prncp_inv'</span>, </span>
+<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a>                  <span class="st">'total_rec_late_fee'</span>, </span>
+<span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a>                  <span class="st">'last_pymnt_amnt'</span>, </span>
+<span id="cb36-5"><a href="#cb36-5" aria-hidden="true" tabindex="-1"></a>                  <span class="st">'recoveries'</span>, <span class="st">'collection_recovery_fee'</span>]].corr()</span>
+<span id="cb36-6"><a href="#cb36-6" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">"Correlation of all amounts type columns"</span>)</span>
+<span id="cb36-7"><a href="#cb36-7" aria-hidden="true" tabindex="-1"></a>sns.heatmap(c, annot<span class="op">=</span><span class="va">True</span>, fmt<span class="op">=</span><span class="st">".1f"</span>)</span>
+<span id="cb36-8"><a href="#cb36-8" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<p><img src="CaseStudy_Loans_EDA-scratchone_files/figure-html/cell-25-output-1.png" class="img-fluid"></p>
+</div>
+</div>
+<section id="ignoring-investor-specific-and-recovery-data-columns" class="level4">
+<h4 class="anchored" data-anchor-id="ignoring-investor-specific-and-recovery-data-columns">Ignoring Investor specific and recovery data columns</h4>
+<p>Since lending club is an investor backed P2P lending service, we can ignore the columns like funded_amnt, funded_amnt_inv, total_pymnt_inv, out_prncp_inv.</p>
+<p>Also we will focus on loan related amounts rather than late / recovery details are only related to each other.</p>
+<div class="cell" data-tags="[]" data-execution_count="25">
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>c <span class="op">=</span> loan_data_df[[<span class="st">'loan_amnt'</span>,  <span class="st">'installment'</span>, <span class="st">'total_pymnt'</span>,  <span class="st">'total_rec_prncp'</span>, <span class="st">'total_rec_int'</span>, <span class="st">'annual_inc'</span>,</span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a>                  <span class="st">'out_prncp'</span>,</span>
+<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a>                   </span>
+<span id="cb37-4"><a href="#cb37-4" aria-hidden="true" tabindex="-1"></a>                  <span class="st">'last_pymnt_amnt'</span>]].corr()</span>
+<span id="cb37-5"><a href="#cb37-5" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">"Correlation of all amounts type columns"</span>)</span>
+<span id="cb37-6"><a href="#cb37-6" aria-hidden="true" tabindex="-1"></a>sns.heatmap(c, annot<span class="op">=</span><span class="va">True</span>, fmt<span class="op">=</span><span class="st">".1f"</span>)</span>
+<span id="cb37-7"><a href="#cb37-7" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<p><img src="CaseStudy_Loans_EDA-scratchone_files/figure-html/cell-26-output-1.png" class="img-fluid"></p>
+</div>
+</div>
+<p>From the above graph, we see these group of columns highly correlated: <br> G1: ‘loan_amnt’, ‘funded_amnt’, ‘funded_amnt_inv’, ‘installment’, ‘total_pymnt’, ‘total_pymnt_inv’, ‘total_rec_prncp’, ‘total_rec_int’ <br> G2: ‘out_prncp’, ‘out_prncp_inv’ <br> G3: ‘recoveries’, ‘collection_recovery_fee’ <br> rest are not that related to each other.</p>
+<p><strong>Note</strong> : On the contrary of conventional idea, the Annual income and loan amount are very weakly related.</p>
+<div class="cell" data-tags="[]" data-execution_count="26">
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="co"># plot of default ratio to the total loans given per state. </span></span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a>loan_data_df.groupby([<span class="st">'addr_state'</span>]).agg(default_ratio<span class="op">=</span>(<span class="st">'loan_status'</span>, <span class="kw">lambda</span> x: (x<span class="op">==</span><span class="st">'Charged Off'</span>).<span class="bu">sum</span>() <span class="op">/</span> x.count())).plot.box()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="26">
+<pre><code>&lt;Axes: &gt;</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<p><img src="CaseStudy_Loans_EDA-scratchone_files/figure-html/cell-27-output-2.png" class="img-fluid"></p>
+</div>
+</div>
+</section>
+</section>
+<section id="distribution-of-loans-per-state" class="level3">
+<h3 class="anchored" data-anchor-id="distribution-of-loans-per-state">Distribution of loans per state</h3>
+<div class="cell" data-tags="[]" data-execution_count="27">
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>ax <span class="op">=</span> loan_data_df.groupby([<span class="st">'addr_state'</span>]).agg(</span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a>                                         <span class="co"># avg_income=('annual_inc', 'mean'), </span></span>
+<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a>                                         <span class="co"># num_of_loans=('id', 'count'), </span></span>
+<span id="cb40-4"><a href="#cb40-4" aria-hidden="true" tabindex="-1"></a>                                         charge_off<span class="op">=</span>(<span class="st">'loan_status'</span>, <span class="kw">lambda</span> x: (x<span class="op">==</span><span class="st">'Charged Off'</span>).<span class="bu">sum</span>()),</span>
+<span id="cb40-5"><a href="#cb40-5" aria-hidden="true" tabindex="-1"></a>                                         fully_paid<span class="op">=</span>(<span class="st">'loan_status'</span>, <span class="kw">lambda</span> x: (x<span class="op">==</span><span class="st">'Fully Paid'</span>).<span class="bu">sum</span>()),</span>
+<span id="cb40-6"><a href="#cb40-6" aria-hidden="true" tabindex="-1"></a>                                         current<span class="op">=</span>(<span class="st">'loan_status'</span>, <span class="kw">lambda</span> x: (x<span class="op">==</span><span class="st">'Current'</span>).<span class="bu">sum</span>()),</span>
+<span id="cb40-7"><a href="#cb40-7" aria-hidden="true" tabindex="-1"></a>                                        ).plot.bar(stacked<span class="op">=</span><span class="va">True</span>, xlabel<span class="op">=</span><span class="st">'State'</span>, ylabel<span class="op">=</span><span class="st">'Num of loans'</span>, figsize<span class="op">=</span>(<span class="dv">15</span>, <span class="dv">8</span>))</span>
+<span id="cb40-8"><a href="#cb40-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb40-9"><a href="#cb40-9" aria-hidden="true" tabindex="-1"></a>loan_data_df.groupby([<span class="st">'addr_state'</span>]).agg(default_rate<span class="op">=</span>(<span class="st">'loan_status'</span>, <span class="kw">lambda</span> x: (x<span class="op">==</span><span class="st">'Charged Off'</span>).<span class="bu">sum</span>() <span class="op">/</span> x.count())).plot.line(secondary_y<span class="op">=</span><span class="st">'default_rate'</span>, ax<span class="op">=</span>ax, color<span class="op">=</span><span class="st">'r'</span>, rot<span class="op">=</span><span class="dv">45</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="27">
+<pre><code>&lt;Axes: &gt;</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<p><img src="CaseStudy_Loans_EDA-scratchone_files/figure-html/cell-28-output-2.png" class="img-fluid"></p>
+</div>
+</div>
+<section id="summary" class="level4">
+<h4 class="anchored" data-anchor-id="summary">Summary</h4>
+<p>75 percentile of states are having default rate of around 0.15, so combining both visualizations, following states could be explored for more segmentation, * FL * HI * NV * TN * SD</p>
+<p>to understand what’s causing the defaults at higher rate.</p>
+<p>– Include in insight</p>
+</section>
+</section>
+<section id="distribution-of-average-loan-amount-and-annual-income" class="level3">
+<h3 class="anchored" data-anchor-id="distribution-of-average-loan-amount-and-annual-income">Distribution of Average loan amount and Annual Income</h3>
+<div class="cell" data-tags="[]" data-execution_count="28">
+<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a>ax <span class="op">=</span> loan_data_df.groupby([<span class="st">'addr_state'</span>]).agg(</span>
+<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a>                                         avg_income<span class="op">=</span>(<span class="st">'annual_inc'</span>, <span class="st">'mean'</span>),</span>
+<span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a>                                         avg_loan<span class="op">=</span>(<span class="st">'loan_amnt'</span>, <span class="st">'mean'</span>),</span>
+<span id="cb42-4"><a href="#cb42-4" aria-hidden="true" tabindex="-1"></a>                                        ).plot.line( xlabel<span class="op">=</span><span class="st">'State'</span>, ylabel<span class="op">=</span><span class="st">'Amount'</span>, figsize<span class="op">=</span>(<span class="dv">15</span>, <span class="dv">8</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<p><img src="CaseStudy_Loans_EDA-scratchone_files/figure-html/cell-29-output-1.png" class="img-fluid"></p>
+</div>
+</div>
+</section>
+<section id="distribution-of-types-of-loan_statuses-on-different-params" class="level3">
+<h3 class="anchored" data-anchor-id="distribution-of-types-of-loan_statuses-on-different-params">Distribution of types of loan_statuses on different params</h3>
+<div class="cell" data-tags="[]" data-execution_count="29">
+<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a>ax <span class="op">=</span> loan_data_df.groupby([<span class="st">'loan_amnt_range'</span>]).agg(</span>
+<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a>                                         charge_off<span class="op">=</span>(<span class="st">'loan_status'</span>, <span class="kw">lambda</span> x: (x<span class="op">==</span><span class="st">'Charged Off'</span>).<span class="bu">sum</span>()),</span>
+<span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a>                                         fully_paid<span class="op">=</span>(<span class="st">'loan_status'</span>, <span class="kw">lambda</span> x: (x<span class="op">==</span><span class="st">'Fully Paid'</span>).<span class="bu">sum</span>()),</span>
+<span id="cb43-4"><a href="#cb43-4" aria-hidden="true" tabindex="-1"></a>                                         current<span class="op">=</span>(<span class="st">'loan_status'</span>, <span class="kw">lambda</span> x: (x<span class="op">==</span><span class="st">'Current'</span>).<span class="bu">sum</span>()),</span>
+<span id="cb43-5"><a href="#cb43-5" aria-hidden="true" tabindex="-1"></a>                                        ).plot.bar(stacked<span class="op">=</span><span class="va">True</span>, xlabel<span class="op">=</span><span class="st">'loan amount'</span>, ylabel<span class="op">=</span><span class="st">'num of loans'</span>, figsize<span class="op">=</span>(<span class="dv">10</span>, <span class="dv">8</span>))</span>
+<span id="cb43-6"><a href="#cb43-6" aria-hidden="true" tabindex="-1"></a>loan_data_df.groupby([<span class="st">'loan_amnt_range'</span>]).agg(default_rate<span class="op">=</span>(<span class="st">'loan_status'</span>, <span class="kw">lambda</span> x: (x<span class="op">==</span><span class="st">'Charged Off'</span>).<span class="bu">sum</span>() <span class="op">/</span> x.count())).plot.line(secondary_y<span class="op">=</span><span class="st">'default_rate'</span>, ax<span class="op">=</span>ax, color<span class="op">=</span><span class="st">'r'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="29">
+<pre><code>&lt;Axes: &gt;</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<p><img src="CaseStudy_Loans_EDA-scratchone_files/figure-html/cell-30-output-2.png" class="img-fluid"></p>
+</div>
+</div>
+<div class="cell" data-tags="[]" data-execution_count="30">
+<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a>ax <span class="op">=</span> loan_data_df.groupby([<span class="st">'annual_inc_range'</span>]).agg(</span>
+<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a>                                         charge_off<span class="op">=</span>(<span class="st">'loan_status'</span>, <span class="kw">lambda</span> x: (x<span class="op">==</span><span class="st">'Charged Off'</span>).<span class="bu">sum</span>()),</span>
+<span id="cb45-3"><a href="#cb45-3" aria-hidden="true" tabindex="-1"></a>                                         fully_paid<span class="op">=</span>(<span class="st">'loan_status'</span>, <span class="kw">lambda</span> x: (x<span class="op">==</span><span class="st">'Fully Paid'</span>).<span class="bu">sum</span>()),</span>
+<span id="cb45-4"><a href="#cb45-4" aria-hidden="true" tabindex="-1"></a>                                         current<span class="op">=</span>(<span class="st">'loan_status'</span>, <span class="kw">lambda</span> x: (x<span class="op">==</span><span class="st">'Current'</span>).<span class="bu">sum</span>()),</span>
+<span id="cb45-5"><a href="#cb45-5" aria-hidden="true" tabindex="-1"></a>                                        ).plot.bar(stacked<span class="op">=</span><span class="va">True</span>, xlabel<span class="op">=</span><span class="st">'annual income'</span>, ylabel<span class="op">=</span><span class="st">'num of loans'</span>, figsize<span class="op">=</span>(<span class="dv">10</span>, <span class="dv">8</span>))</span>
+<span id="cb45-6"><a href="#cb45-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb45-7"><a href="#cb45-7" aria-hidden="true" tabindex="-1"></a>loan_data_df.groupby([<span class="st">'annual_inc_range'</span>]).agg(default_rate<span class="op">=</span>(<span class="st">'loan_status'</span>, <span class="kw">lambda</span> x: (x<span class="op">==</span><span class="st">'Charged Off'</span>).<span class="bu">sum</span>() <span class="op">/</span> x.count())).plot.line(secondary_y<span class="op">=</span><span class="st">'default_rate'</span>, ax<span class="op">=</span>ax, color<span class="op">=</span><span class="st">'r'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="30">
+<pre><code>&lt;Axes: &gt;</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<p><img src="CaseStudy_Loans_EDA-scratchone_files/figure-html/cell-31-output-2.png" class="img-fluid"></p>
+</div>
+</div>
+<div class="cell" data-tags="[]" data-execution_count="31">
+<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a>ax <span class="op">=</span> loan_data_df.groupby([<span class="st">'verification_status'</span>]).agg(</span>
+<span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a>                                         charge_off<span class="op">=</span>(<span class="st">'loan_status'</span>, <span class="kw">lambda</span> x: (x<span class="op">==</span><span class="st">'Charged Off'</span>).<span class="bu">sum</span>()),</span>
+<span id="cb47-3"><a href="#cb47-3" aria-hidden="true" tabindex="-1"></a>                                         fully_paid<span class="op">=</span>(<span class="st">'loan_status'</span>, <span class="kw">lambda</span> x: (x<span class="op">==</span><span class="st">'Fully Paid'</span>).<span class="bu">sum</span>()),</span>
+<span id="cb47-4"><a href="#cb47-4" aria-hidden="true" tabindex="-1"></a>                                         current<span class="op">=</span>(<span class="st">'loan_status'</span>, <span class="kw">lambda</span> x: (x<span class="op">==</span><span class="st">'Current'</span>).<span class="bu">sum</span>()),</span>
+<span id="cb47-5"><a href="#cb47-5" aria-hidden="true" tabindex="-1"></a>                                        ).plot.bar(stacked<span class="op">=</span><span class="va">True</span>, xlabel<span class="op">=</span><span class="st">'verification status'</span>, ylabel<span class="op">=</span><span class="st">'num of loans'</span>, figsize<span class="op">=</span>(<span class="dv">10</span>, <span class="dv">8</span>))</span>
+<span id="cb47-6"><a href="#cb47-6" aria-hidden="true" tabindex="-1"></a>loan_data_df.groupby([<span class="st">'verification_status'</span>]).agg(default_rate<span class="op">=</span>(<span class="st">'loan_status'</span>, <span class="kw">lambda</span> x: (x<span class="op">==</span><span class="st">'Charged Off'</span>).<span class="bu">sum</span>() <span class="op">/</span> x.count())).plot.line(secondary_y<span class="op">=</span><span class="st">'default_rate'</span>, ax<span class="op">=</span>ax, color<span class="op">=</span><span class="st">'r'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="31">
+<pre><code>&lt;Axes: &gt;</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<p><img src="CaseStudy_Loans_EDA-scratchone_files/figure-html/cell-32-output-2.png" class="img-fluid"></p>
+</div>
+</div>
+<section id="summary-1" class="level4">
+<h4 class="anchored" data-anchor-id="summary-1">Summary</h4>
+<p>Verified status does not have much impact on the probability of default. We need to dig deeper to confirm this fact / bias.</p>
+<div class="cell" data-tags="[]" data-execution_count="32">
+<div class="sourceCode cell-code" id="cb49"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a>ax <span class="op">=</span> loan_data_df[loan_data_df.loan_status<span class="op">==</span><span class="st">'Charged Off'</span>].groupby([<span class="st">'loan_amnt_range'</span>]).agg(</span>
+<span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a>                                         not_verified<span class="op">=</span>(<span class="st">'verification_status'</span>, <span class="kw">lambda</span> x: (x<span class="op">==</span><span class="st">'Not Verified'</span>).<span class="bu">sum</span>()),</span>
+<span id="cb49-3"><a href="#cb49-3" aria-hidden="true" tabindex="-1"></a>                                         source_verified<span class="op">=</span>(<span class="st">'verification_status'</span>, <span class="kw">lambda</span> x: (x<span class="op">==</span><span class="st">'Source Verified'</span>).<span class="bu">sum</span>()),</span>
+<span id="cb49-4"><a href="#cb49-4" aria-hidden="true" tabindex="-1"></a>                                         verified<span class="op">=</span>(<span class="st">'verification_status'</span>, <span class="kw">lambda</span> x: (x<span class="op">==</span><span class="st">'Verified'</span>).<span class="bu">sum</span>()),</span>
+<span id="cb49-5"><a href="#cb49-5" aria-hidden="true" tabindex="-1"></a>                                        ).plot.bar(stacked<span class="op">=</span><span class="va">False</span>, xlabel<span class="op">=</span><span class="st">'Loan Amount Range'</span>, ylabel<span class="op">=</span><span class="st">'Num of Loans'</span>, figsize<span class="op">=</span>(<span class="dv">10</span>, <span class="dv">8</span>))</span>
+<span id="cb49-6"><a href="#cb49-6" aria-hidden="true" tabindex="-1"></a><span class="co">#loan_data_df.groupby(['verification_status']).agg(default_rate=('loan_status', lambda x: (x=='Charged Off').sum() / x.count())).plot.line(secondary_y='default_rate', ax=ax, color='r')</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<p><img src="CaseStudy_Loans_EDA-scratchone_files/figure-html/cell-33-output-1.png" class="img-fluid"></p>
+</div>
+</div>
+<div class="cell" data-tags="[]" data-execution_count="33">
+<div class="sourceCode cell-code" id="cb50"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a>ax <span class="op">=</span> loan_data_df[loan_data_df.loan_status<span class="op">==</span><span class="st">'Charged Off'</span>].groupby([<span class="st">'annual_inc_range'</span>]).agg(</span>
+<span id="cb50-2"><a href="#cb50-2" aria-hidden="true" tabindex="-1"></a>                                         not_verified<span class="op">=</span>(<span class="st">'verification_status'</span>, <span class="kw">lambda</span> x: (x<span class="op">==</span><span class="st">'Not Verified'</span>).<span class="bu">sum</span>()),</span>
+<span id="cb50-3"><a href="#cb50-3" aria-hidden="true" tabindex="-1"></a>                                         source_verified<span class="op">=</span>(<span class="st">'verification_status'</span>, <span class="kw">lambda</span> x: (x<span class="op">==</span><span class="st">'Source Verified'</span>).<span class="bu">sum</span>()),</span>
+<span id="cb50-4"><a href="#cb50-4" aria-hidden="true" tabindex="-1"></a>                                         verified<span class="op">=</span>(<span class="st">'verification_status'</span>, <span class="kw">lambda</span> x: (x<span class="op">==</span><span class="st">'Verified'</span>).<span class="bu">sum</span>()),</span>
+<span id="cb50-5"><a href="#cb50-5" aria-hidden="true" tabindex="-1"></a>                                        ).plot.bar(stacked<span class="op">=</span><span class="va">False</span>, xlabel<span class="op">=</span><span class="st">'Loan Amount Range'</span>, ylabel<span class="op">=</span><span class="st">'Num of Loans'</span>, figsize<span class="op">=</span>(<span class="dv">10</span>, <span class="dv">8</span>))</span>
+<span id="cb50-6"><a href="#cb50-6" aria-hidden="true" tabindex="-1"></a><span class="co">#loan_data_df.groupby(['verification_status']).agg(default_rate=('loan_status', lambda x: (x=='Charged Off').sum() / x.count())).plot.line(secondary_y='default_rate', ax=ax, color='r')</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<p><img src="CaseStudy_Loans_EDA-scratchone_files/figure-html/cell-34-output-1.png" class="img-fluid"></p>
+</div>
+</div>
+<div class="cell" data-tags="[]" data-execution_count="34">
+<div class="sourceCode cell-code" id="cb51"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a>ax <span class="op">=</span> loan_data_df.groupby([<span class="st">'purpose'</span>]).agg(</span>
+<span id="cb51-2"><a href="#cb51-2" aria-hidden="true" tabindex="-1"></a>                                         charge_off<span class="op">=</span>(<span class="st">'loan_status'</span>, <span class="kw">lambda</span> x: (x<span class="op">==</span><span class="st">'Charged Off'</span>).<span class="bu">sum</span>()),</span>
+<span id="cb51-3"><a href="#cb51-3" aria-hidden="true" tabindex="-1"></a>                                         fully_paid<span class="op">=</span>(<span class="st">'loan_status'</span>, <span class="kw">lambda</span> x: (x<span class="op">==</span><span class="st">'Fully Paid'</span>).<span class="bu">sum</span>()),</span>
+<span id="cb51-4"><a href="#cb51-4" aria-hidden="true" tabindex="-1"></a>                                         current<span class="op">=</span>(<span class="st">'loan_status'</span>, <span class="kw">lambda</span> x: (x<span class="op">==</span><span class="st">'Current'</span>).<span class="bu">sum</span>()),</span>
+<span id="cb51-5"><a href="#cb51-5" aria-hidden="true" tabindex="-1"></a>                                        ).plot.bar(stacked<span class="op">=</span><span class="va">True</span>, xlabel<span class="op">=</span><span class="st">'purpose of loan'</span>, ylabel<span class="op">=</span><span class="st">'num of loans'</span>, figsize<span class="op">=</span>(<span class="dv">15</span>, <span class="dv">6</span>))</span>
+<span id="cb51-6"><a href="#cb51-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb51-7"><a href="#cb51-7" aria-hidden="true" tabindex="-1"></a>loan_data_df.groupby([<span class="st">'purpose'</span>]).agg(default_rate<span class="op">=</span>(<span class="st">'loan_status'</span>, <span class="kw">lambda</span> x: (x<span class="op">==</span><span class="st">'Charged Off'</span>).<span class="bu">sum</span>() <span class="op">/</span> x.count())).plot.line(secondary_y<span class="op">=</span><span class="st">'default_rate'</span>, ax<span class="op">=</span>ax, color<span class="op">=</span><span class="st">'r'</span>, rot<span class="op">=</span><span class="dv">45</span>)</span>
+<span id="cb51-8"><a href="#cb51-8" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<p><img src="CaseStudy_Loans_EDA-scratchone_files/figure-html/cell-35-output-1.png" class="img-fluid"></p>
+</div>
+</div>
+<div class="cell" data-tags="[]" data-execution_count="50">
+<div class="sourceCode cell-code" id="cb52"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a>ax <span class="op">=</span> loan_data_df.groupby([<span class="st">'delinq_2yrs'</span>]).agg(</span>
+<span id="cb52-2"><a href="#cb52-2" aria-hidden="true" tabindex="-1"></a>                                         charge_off<span class="op">=</span>(<span class="st">'loan_status'</span>, <span class="kw">lambda</span> x: (x<span class="op">==</span><span class="st">'Charged Off'</span>).<span class="bu">sum</span>()),</span>
+<span id="cb52-3"><a href="#cb52-3" aria-hidden="true" tabindex="-1"></a>                                         fully_paid<span class="op">=</span>(<span class="st">'loan_status'</span>, <span class="kw">lambda</span> x: (x<span class="op">==</span><span class="st">'Fully Paid'</span>).<span class="bu">sum</span>()),</span>
+<span id="cb52-4"><a href="#cb52-4" aria-hidden="true" tabindex="-1"></a>                                         <span class="co"># current=('loan_status', lambda x: (x=='Current').sum()),</span></span>
+<span id="cb52-5"><a href="#cb52-5" aria-hidden="true" tabindex="-1"></a>                                        ).plot.bar(stacked<span class="op">=</span><span class="va">False</span>, xlabel<span class="op">=</span><span class="st">'delinq in 2yrs'</span>, ylabel<span class="op">=</span><span class="st">'num of loans'</span>, logy<span class="op">=</span><span class="va">True</span>, figsize<span class="op">=</span>(<span class="dv">10</span>, <span class="dv">8</span>))</span>
+<span id="cb52-6"><a href="#cb52-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb52-7"><a href="#cb52-7" aria-hidden="true" tabindex="-1"></a>loan_data_df.groupby([<span class="st">'delinq_2yrs'</span>]).agg(default_rate<span class="op">=</span>(<span class="st">'loan_status'</span>, <span class="kw">lambda</span> x: (x<span class="op">==</span><span class="st">'Charged Off'</span>).<span class="bu">sum</span>() <span class="op">/</span> x.count())).plot.line(secondary_y<span class="op">=</span><span class="st">'default_rate'</span>, ax<span class="op">=</span>ax, color<span class="op">=</span><span class="st">'r'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="50">
+<pre><code>&lt;Axes: &gt;</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<p><img src="CaseStudy_Loans_EDA-scratchone_files/figure-html/cell-36-output-2.png" class="img-fluid"></p>
+</div>
+</div>
+</section>
+<section id="summary-2" class="level4">
+<h4 class="anchored" data-anchor-id="summary-2">Summary</h4>
+<p>In the current dataset, the measure : delinquency in last 2 years is not a very useful information because even for zero deliquant borrowers, there 10% of loans are charged off.</p>
+<p>Yes when the no. of delinquency instances increase, the ratio does got up but the number of loans are so less, we can not conclude accurately.</p>
+<p>It seems that Lending club is already considering this measure while approving the loans and hardly 2% to 3% of total loans are given when there is one of more delinquency instances.</p>
+<div class="cell" data-tags="[]" data-execution_count="36">
+<div class="sourceCode cell-code" id="cb54"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 'installment_to_month_inc'</span></span>
+<span id="cb54-2"><a href="#cb54-2" aria-hidden="true" tabindex="-1"></a>ax <span class="op">=</span> loan_data_df.groupby([<span class="st">'open_to_total_acc'</span>]).agg(</span>
+<span id="cb54-3"><a href="#cb54-3" aria-hidden="true" tabindex="-1"></a>                                         charge_off<span class="op">=</span>(<span class="st">'loan_status'</span>, <span class="kw">lambda</span> x: (x<span class="op">==</span><span class="st">'Charged Off'</span>).<span class="bu">sum</span>()),</span>
+<span id="cb54-4"><a href="#cb54-4" aria-hidden="true" tabindex="-1"></a>                                         fully_paid<span class="op">=</span>(<span class="st">'loan_status'</span>, <span class="kw">lambda</span> x: (x<span class="op">==</span><span class="st">'Fully Paid'</span>).<span class="bu">sum</span>()),</span>
+<span id="cb54-5"><a href="#cb54-5" aria-hidden="true" tabindex="-1"></a>                                         <span class="co"># current=('loan_status', lambda x: (x=='Current').sum()),</span></span>
+<span id="cb54-6"><a href="#cb54-6" aria-hidden="true" tabindex="-1"></a>                                        ).plot.bar(stacked<span class="op">=</span><span class="va">True</span>, xlabel<span class="op">=</span><span class="st">'ratio of open to total accounts'</span>, ylabel<span class="op">=</span><span class="st">'num of loans'</span>, figsize<span class="op">=</span>(<span class="dv">10</span>, <span class="dv">8</span>))</span>
+<span id="cb54-7"><a href="#cb54-7" aria-hidden="true" tabindex="-1"></a>loan_data_df.groupby([<span class="st">'open_to_total_acc'</span>]).agg(default_rate<span class="op">=</span>(<span class="st">'loan_status'</span>, <span class="kw">lambda</span> x: (x<span class="op">==</span><span class="st">'Charged Off'</span>).<span class="bu">sum</span>() <span class="op">/</span> x.count())).plot.line(secondary_y<span class="op">=</span><span class="st">'default_rate'</span>, ax<span class="op">=</span>ax, color<span class="op">=</span><span class="st">'r'</span>)</span>
+<span id="cb54-8"><a href="#cb54-8" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<p><img src="CaseStudy_Loans_EDA-scratchone_files/figure-html/cell-37-output-1.png" class="img-fluid"></p>
+</div>
+</div>
+<div class="cell" data-tags="[]" data-execution_count="37">
+<div class="sourceCode cell-code" id="cb55"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a>ax <span class="op">=</span> loan_data_df.groupby([<span class="st">'installment_to_month_inc'</span>]).agg(</span>
+<span id="cb55-2"><a href="#cb55-2" aria-hidden="true" tabindex="-1"></a>                                         charge_off<span class="op">=</span>(<span class="st">'loan_status'</span>, <span class="kw">lambda</span> x: (x<span class="op">==</span><span class="st">'Charged Off'</span>).<span class="bu">sum</span>()),</span>
+<span id="cb55-3"><a href="#cb55-3" aria-hidden="true" tabindex="-1"></a>                                         fully_paid<span class="op">=</span>(<span class="st">'loan_status'</span>, <span class="kw">lambda</span> x: (x<span class="op">==</span><span class="st">'Fully Paid'</span>).<span class="bu">sum</span>()),</span>
+<span id="cb55-4"><a href="#cb55-4" aria-hidden="true" tabindex="-1"></a>                                        ).plot.bar(stacked<span class="op">=</span><span class="va">True</span>, xlabel<span class="op">=</span><span class="st">'installment to monthly income ratio'</span>, ylabel<span class="op">=</span><span class="st">'num of loans'</span>, figsize<span class="op">=</span>(<span class="dv">10</span>, <span class="dv">8</span>))</span>
+<span id="cb55-5"><a href="#cb55-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb55-6"><a href="#cb55-6" aria-hidden="true" tabindex="-1"></a>loan_data_df.groupby([<span class="st">'installment_to_month_inc'</span>]).agg(default_rate<span class="op">=</span>(<span class="st">'loan_status'</span>, <span class="kw">lambda</span> x: (x<span class="op">==</span><span class="st">'Charged Off'</span>).<span class="bu">sum</span>() <span class="op">/</span> x.count())).plot.line(secondary_y<span class="op">=</span><span class="st">'default_rate'</span>, ax<span class="op">=</span>ax, color<span class="op">=</span><span class="st">'r'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="37">
+<pre><code>&lt;Axes: &gt;</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<p><img src="CaseStudy_Loans_EDA-scratchone_files/figure-html/cell-38-output-2.png" class="img-fluid"></p>
+</div>
+</div>
+<div class="cell" data-tags="[]" data-execution_count="38">
+<div class="sourceCode cell-code" id="cb57"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a>loan_data_df.groupby([<span class="st">'annual_inc_range'</span>,<span class="st">'verification_status'</span>]).agg(</span>
+<span id="cb57-2"><a href="#cb57-2" aria-hidden="true" tabindex="-1"></a>                                         charge_off<span class="op">=</span>(<span class="st">'loan_status'</span>, <span class="kw">lambda</span> x: (x<span class="op">==</span><span class="st">'Charged Off'</span>).<span class="bu">sum</span>()),</span>
+<span id="cb57-3"><a href="#cb57-3" aria-hidden="true" tabindex="-1"></a>                                         fully_paid<span class="op">=</span>(<span class="st">'loan_status'</span>, <span class="kw">lambda</span> x: (x<span class="op">==</span><span class="st">'Fully Paid'</span>).<span class="bu">sum</span>()),</span>
+<span id="cb57-4"><a href="#cb57-4" aria-hidden="true" tabindex="-1"></a>                                        ).plot.bar(xlabel<span class="op">=</span><span class="st">'installment to monthly income ratio'</span>, ylabel<span class="op">=</span><span class="st">'num of loans'</span>)</span>
+<span id="cb57-5"><a href="#cb57-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb57-6"><a href="#cb57-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb57-7"><a href="#cb57-7" aria-hidden="true" tabindex="-1"></a>loan_data_df.groupby([<span class="st">'annual_inc_range'</span>, <span class="st">'verification_status'</span>]).agg(</span>
+<span id="cb57-8"><a href="#cb57-8" aria-hidden="true" tabindex="-1"></a>    default_rate<span class="op">=</span>(<span class="st">'loan_status'</span>, <span class="kw">lambda</span> x: (x<span class="op">==</span><span class="st">'Charged Off'</span>).<span class="bu">sum</span>() <span class="op">/</span> x.count())).plot.line(secondary_y<span class="op">=</span><span class="st">'default_rate'</span>, ax<span class="op">=</span>ax, color<span class="op">=</span><span class="st">'r'</span>, rot<span class="op">=</span><span class="dv">45</span>)</span>
+<span id="cb57-9"><a href="#cb57-9" aria-hidden="true" tabindex="-1"></a>plt.show()</span>
+<span id="cb57-10"><a href="#cb57-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb57-11"><a href="#cb57-11" aria-hidden="true" tabindex="-1"></a>c <span class="op">=</span> pd.pivot_table(loan_data_df, index<span class="op">=</span><span class="st">'annual_inc_range'</span>, columns<span class="op">=</span><span class="st">'verification_status'</span>, values<span class="op">=</span><span class="st">'loan_status'</span>, aggfunc<span class="op">=</span><span class="kw">lambda</span> x: (x<span class="op">==</span><span class="st">'Charged Off'</span>).<span class="bu">sum</span>() <span class="op">/</span> x.count())</span>
+<span id="cb57-12"><a href="#cb57-12" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">'Default rates for Loan amounts vs Verification status'</span>)</span>
+<span id="cb57-13"><a href="#cb57-13" aria-hidden="true" tabindex="-1"></a>sns.heatmap(c, annot<span class="op">=</span><span class="va">True</span>, fmt<span class="op">=</span><span class="st">".2f"</span>)</span>
+<span id="cb57-14"><a href="#cb57-14" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<p><img src="CaseStudy_Loans_EDA-scratchone_files/figure-html/cell-39-output-1.png" class="img-fluid"></p>
+</div>
+<div class="cell-output cell-output-display">
+<p><img src="CaseStudy_Loans_EDA-scratchone_files/figure-html/cell-39-output-2.png" class="img-fluid"></p>
+</div>
+</div>
+<div class="cell" data-tags="[]" data-execution_count="39">
+<div class="sourceCode cell-code" id="cb58"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(pd.pivot_table(loan_data_df[loan_data_df[<span class="st">'loan_status'</span>] <span class="op">==</span> <span class="st">'Charged Off'</span>], index<span class="op">=</span>[<span class="st">'annual_inc_range'</span>, <span class="st">'loan_amnt_range'</span>], columns<span class="op">=</span><span class="st">'verification_status'</span>, values<span class="op">=</span><span class="st">'loan_status_n'</span>, aggfunc<span class="op">=</span><span class="st">'count'</span>))</span>
+<span id="cb58-2"><a href="#cb58-2" aria-hidden="true" tabindex="-1"></a>c <span class="op">=</span> pd.pivot_table(loan_data_df, index<span class="op">=</span><span class="st">'loan_amnt_range'</span>, columns<span class="op">=</span><span class="st">'verification_status'</span>, values<span class="op">=</span><span class="st">'loan_status'</span>, aggfunc<span class="op">=</span><span class="kw">lambda</span> x: (x<span class="op">==</span><span class="st">'Charged Off'</span>).<span class="bu">sum</span>() <span class="op">/</span> x.count())</span>
+<span id="cb58-3"><a href="#cb58-3" aria-hidden="true" tabindex="-1"></a>sns.heatmap(c, annot<span class="op">=</span><span class="va">True</span>, fmt<span class="op">=</span><span class="st">".2f"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>verification_status               Not Verified  Source Verified  Verified
+annual_inc_range loan_amnt_range                                         
+below 10k        below 1k                    2                1         0
+                 1k-5k                       8                2         2
+                 5k-10k                      0                0         0
+                 10k-25k                     0                0         0
+                 25k+                        0                0         0
+10k-50k          below 1k                   14                6         4
+                 1k-5k                     387              246       107
+                 5k-10k                    417              235       180
+                 10k-25k                   207              201       316
+                 25k+                        0                1         7
+50k-100k         below 1k                    2                1         0
+                 1k-5k                     177              100        54
+                 5k-10k                    266              158       162
+                 10k-25k                   285              262       629
+                 25k+                        1               26       167
+100k-500k        below 1k                    0                0         0
+                 1k-5k                      18                8        16
+                 5k-10k                     38               29        34
+                 10k-25k                    65               76       165
+                 25k+                        0               25        86
+500k-1M          below 1k                    0                0         0
+                 1k-5k                       0                1         0
+                 5k-10k                      2                0         0
+                 10k-25k                     2                2         1
+                 25k+                        0                0         1
+1M+              below 1k                    0                0         0
+                 1k-5k                       0                0         0
+                 5k-10k                      0                0         0
+                 10k-25k                     0                0         1
+                 25k+                        0                0         0</code></pre>
+</div>
+<div class="cell-output cell-output-display" data-execution_count="39">
+<pre><code>&lt;Axes: xlabel='verification_status', ylabel='loan_amnt_range'&gt;</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<p><img src="CaseStudy_Loans_EDA-scratchone_files/figure-html/cell-40-output-3.png" class="img-fluid"></p>
+</div>
+</div>
+<div class="cell" data-tags="[]" data-execution_count="40">
+<div class="sourceCode cell-code" id="cb61"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb61-1"><a href="#cb61-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Taking a loan with more than 30% of annual inc makes the probability of charge off higher.</span></span>
+<span id="cb61-2"><a href="#cb61-2" aria-hidden="true" tabindex="-1"></a>fig, (ax1, ax2) <span class="op">=</span> plt.subplots(<span class="dv">1</span>,<span class="dv">2</span>, figsize<span class="op">=</span>(<span class="dv">15</span>,<span class="dv">7</span>))</span>
+<span id="cb61-3"><a href="#cb61-3" aria-hidden="true" tabindex="-1"></a>c <span class="op">=</span> pd.pivot_table(loan_data_df[loan_data_df.term <span class="op">==</span> <span class="dv">36</span>], index<span class="op">=</span><span class="st">'annual_inc_range'</span>, columns<span class="op">=</span><span class="st">'loan_amnt_range'</span>, values<span class="op">=</span><span class="st">'loan_status'</span>, aggfunc<span class="op">=</span><span class="kw">lambda</span> x: (x<span class="op">==</span><span class="st">'Charged Off'</span>).<span class="bu">sum</span>() <span class="op">/</span> x.count())</span>
+<span id="cb61-4"><a href="#cb61-4" aria-hidden="true" tabindex="-1"></a>sns.heatmap(c, annot<span class="op">=</span><span class="va">True</span>, fmt<span class="op">=</span><span class="st">".2f"</span>, ax<span class="op">=</span>ax1)</span>
+<span id="cb61-5"><a href="#cb61-5" aria-hidden="true" tabindex="-1"></a>ax1.set_title(<span class="st">'Annual income to loan amount showing default rates for 36m term '</span>)</span>
+<span id="cb61-6"><a href="#cb61-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb61-7"><a href="#cb61-7" aria-hidden="true" tabindex="-1"></a>c <span class="op">=</span> pd.pivot_table(loan_data_df[loan_data_df.term <span class="op">==</span> <span class="dv">60</span>], index<span class="op">=</span><span class="st">'annual_inc_range'</span>, columns<span class="op">=</span><span class="st">'loan_amnt_range'</span>, values<span class="op">=</span><span class="st">'loan_status'</span>, aggfunc<span class="op">=</span><span class="kw">lambda</span> x: (x<span class="op">==</span><span class="st">'Charged Off'</span>).<span class="bu">sum</span>() <span class="op">/</span> x.count())</span>
+<span id="cb61-8"><a href="#cb61-8" aria-hidden="true" tabindex="-1"></a>sns.heatmap(c, annot<span class="op">=</span><span class="va">True</span>, fmt<span class="op">=</span><span class="st">".2f"</span>, ax<span class="op">=</span>ax2)</span>
+<span id="cb61-9"><a href="#cb61-9" aria-hidden="true" tabindex="-1"></a>ax2.set_title(<span class="st">'Annual income to loan amount showing default rates for 60m term'</span>)</span>
+<span id="cb61-10"><a href="#cb61-10" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<p><img src="CaseStudy_Loans_EDA-scratchone_files/figure-html/cell-41-output-1.png" class="img-fluid"></p>
+</div>
+</div>
+</section>
+<section id="summary-3" class="level4">
+<h4 class="anchored" data-anchor-id="summary-3">Summary</h4>
+<p>Taking a loan with more than 30% of annual inc makes the probability of charge off higher.</p>
+<p>– insight</p>
+<div class="cell" data-tags="[]" data-execution_count="41">
+<div class="sourceCode cell-code" id="cb62"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb62-1"><a href="#cb62-1" aria-hidden="true" tabindex="-1"></a><span class="co"># higher loan term makes the probability of charge off higher for larger loan amounts</span></span>
+<span id="cb62-2"><a href="#cb62-2" aria-hidden="true" tabindex="-1"></a>fig, (ax1, ax2) <span class="op">=</span> plt.subplots(<span class="dv">1</span>,<span class="dv">2</span>, figsize<span class="op">=</span>(<span class="dv">15</span>,<span class="dv">7</span>))</span>
+<span id="cb62-3"><a href="#cb62-3" aria-hidden="true" tabindex="-1"></a>pd.pivot_table(loan_data_df, index<span class="op">=</span><span class="st">'loan_amnt_range'</span>, columns<span class="op">=</span><span class="st">'term'</span>, values<span class="op">=</span><span class="st">'loan_status'</span>, aggfunc<span class="op">=</span><span class="kw">lambda</span> x: (x<span class="op">==</span><span class="st">'Charged Off'</span>).<span class="bu">sum</span>() <span class="op">/</span> x.count()).plot.line(ax<span class="op">=</span>ax1, ylabel<span class="op">=</span><span class="st">'Default rate'</span>)</span>
+<span id="cb62-4"><a href="#cb62-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb62-5"><a href="#cb62-5" aria-hidden="true" tabindex="-1"></a>pd.pivot_table(loan_data_df, index<span class="op">=</span><span class="st">'annual_inc_range'</span>, columns<span class="op">=</span><span class="st">'term'</span>, values<span class="op">=</span><span class="st">'loan_status'</span>, aggfunc<span class="op">=</span><span class="kw">lambda</span> x: (x<span class="op">==</span><span class="st">'Charged Off'</span>).<span class="bu">sum</span>() <span class="op">/</span> x.count()).plot.line(ax<span class="op">=</span>ax2, ylabel<span class="op">=</span><span class="st">'Default rate'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="41">
+<pre><code>&lt;Axes: xlabel='annual_inc_range', ylabel='Default rate'&gt;</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<p><img src="CaseStudy_Loans_EDA-scratchone_files/figure-html/cell-42-output-2.png" class="img-fluid"></p>
+</div>
+</div>
+</section>
+<section id="summary-4" class="level4">
+<h4 class="anchored" data-anchor-id="summary-4">Summary</h4>
+<p>The loan term has a positive correlation with “charged off” probability.</p>
+<p>Higher the tenure and higher the loan amount, are positvely correlated with the probability of charged off.</p>
+<p>and higher tenure (i.e.&nbsp;60 months) would always higher probablity of charged off compared to lower tenure (i.e.&nbsp;36 months) regardless of the loan amount.</p>
+<p>In general higher tenure loans recover high portion of interest in initial 50% of time and that may be the reason.</p>
+<p>– Insight</p>
+<div class="cell" data-tags="[]" data-execution_count="42">
+<div class="sourceCode cell-code" id="cb64"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb64-1"><a href="#cb64-1" aria-hidden="true" tabindex="-1"></a>defaulted_loans <span class="op">=</span> loan_data_df[loan_data_df.loan_status <span class="op">==</span> <span class="st">'Charged Off'</span>]</span>
+<span id="cb64-2"><a href="#cb64-2" aria-hidden="true" tabindex="-1"></a>pd.cut(defaulted_loans.total_pymnt <span class="op">/</span> (defaulted_loans.loan_amnt <span class="op">*</span> (<span class="dv">1</span><span class="op">+</span>defaulted_loans.int_rate)), bins<span class="op">=</span>np.linspace(<span class="dv">0</span>,<span class="dv">1</span>,<span class="dv">7</span>)).value_counts(sort<span class="op">=</span><span class="va">False</span>).plot.line(rot<span class="op">=</span><span class="dv">45</span>, xlabel<span class="op">=</span><span class="st">'fraction of loan repaid'</span>, ylabel<span class="op">=</span><span class="st">'num of defaulted loans'</span>)</span>
+<span id="cb64-3"><a href="#cb64-3" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">'Fraction repaid vs num of defaulted loans'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="42">
+<pre><code>Text(0.5, 1.0, 'Fraction repaid vs num of defaulted loans')</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<p><img src="CaseStudy_Loans_EDA-scratchone_files/figure-html/cell-43-output-2.png" class="img-fluid"></p>
+</div>
+</div>
+<div class="cell" data-tags="[]" data-execution_count="43">
+<div class="sourceCode cell-code" id="cb66"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb66-1"><a href="#cb66-1" aria-hidden="true" tabindex="-1"></a>fig, (ax1, ax2) <span class="op">=</span> plt.subplots(<span class="dv">1</span>,<span class="dv">2</span>, figsize<span class="op">=</span>(<span class="dv">20</span>,<span class="dv">8</span>))</span>
+<span id="cb66-2"><a href="#cb66-2" aria-hidden="true" tabindex="-1"></a>loan_data_df[loan_data_df.earliest_cr_line.dt.year<span class="op">&gt;</span><span class="dv">1980</span>].groupby(loan_data_df.earliest_cr_line.dt.year).agg(</span>
+<span id="cb66-3"><a href="#cb66-3" aria-hidden="true" tabindex="-1"></a>                                         charge_off<span class="op">=</span>(<span class="st">'loan_status'</span>, <span class="kw">lambda</span> x: (x<span class="op">==</span><span class="st">'Charged Off'</span>).<span class="bu">sum</span>()),</span>
+<span id="cb66-4"><a href="#cb66-4" aria-hidden="true" tabindex="-1"></a>                                         fully_paid<span class="op">=</span>(<span class="st">'loan_status'</span>, <span class="kw">lambda</span> x: (x<span class="op">==</span><span class="st">'Fully Paid'</span>).<span class="bu">sum</span>()),</span>
+<span id="cb66-5"><a href="#cb66-5" aria-hidden="true" tabindex="-1"></a>                                         current<span class="op">=</span>(<span class="st">'loan_status'</span>, <span class="kw">lambda</span> x: (x<span class="op">==</span><span class="st">'Current'</span>).<span class="bu">sum</span>()),</span>
+<span id="cb66-6"><a href="#cb66-6" aria-hidden="true" tabindex="-1"></a>                                        ).plot.bar(stacked<span class="op">=</span><span class="va">True</span>, ylabel<span class="op">=</span><span class="st">'num of loans'</span>, ax<span class="op">=</span>ax1)</span>
+<span id="cb66-7"><a href="#cb66-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb66-8"><a href="#cb66-8" aria-hidden="true" tabindex="-1"></a>loan_data_df[loan_data_df.earliest_cr_line.dt.year<span class="op">&gt;</span><span class="dv">1980</span>].groupby(loan_data_df.earliest_cr_line.dt.year).agg(default_rate<span class="op">=</span>(<span class="st">'loan_status'</span>, <span class="kw">lambda</span> x: (x<span class="op">==</span><span class="st">'Charged Off'</span>).<span class="bu">sum</span>() <span class="op">/</span> x.count())).plot.line(secondary_y<span class="op">=</span><span class="st">'default_rate'</span>, ax<span class="op">=</span>ax2, color<span class="op">=</span><span class="st">'r'</span>, rot<span class="op">=</span><span class="dv">90</span>)</span>
+<span id="cb66-9"><a href="#cb66-9" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<p><img src="CaseStudy_Loans_EDA-scratchone_files/figure-html/cell-44-output-1.png" class="img-fluid"></p>
+</div>
+</div>
+<div class="cell" data-tags="[]" data-execution_count="44">
+<div class="sourceCode cell-code" id="cb67"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb67-1"><a href="#cb67-1" aria-hidden="true" tabindex="-1"></a>fig, (ax1, ax2) <span class="op">=</span> plt.subplots(<span class="dv">1</span>,<span class="dv">2</span>, figsize<span class="op">=</span>(<span class="dv">20</span>,<span class="dv">8</span>))</span>
+<span id="cb67-2"><a href="#cb67-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb67-3"><a href="#cb67-3" aria-hidden="true" tabindex="-1"></a>defaulted_loans <span class="op">=</span> loan_data_df[loan_data_df.loan_status <span class="op">==</span> <span class="st">'Charged Off'</span>]</span>
+<span id="cb67-4"><a href="#cb67-4" aria-hidden="true" tabindex="-1"></a>pd.cut(defaulted_loans.dti, bins<span class="op">=</span>np.linspace(<span class="dv">0</span>,<span class="dv">33</span>,<span class="dv">7</span>)).value_counts(sort<span class="op">=</span><span class="va">False</span>).plot.line(rot<span class="op">=</span><span class="dv">45</span>, xlabel<span class="op">=</span><span class="st">'dti'</span>, ylabel<span class="op">=</span><span class="st">'num of defaulted loans'</span>, ax<span class="op">=</span>ax1)</span>
+<span id="cb67-5"><a href="#cb67-5" aria-hidden="true" tabindex="-1"></a>ax1.set_title(<span class="st">'DTI vs num of defaulted loans'</span>)</span>
+<span id="cb67-6"><a href="#cb67-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb67-7"><a href="#cb67-7" aria-hidden="true" tabindex="-1"></a>defaulted_loans.installment_to_month_inc.value_counts(sort<span class="op">=</span><span class="va">False</span>).plot.line(rot<span class="op">=</span><span class="dv">45</span>, xlabel<span class="op">=</span><span class="st">'installment_to_month_inc'</span>, ylabel<span class="op">=</span><span class="st">'num of defaulted loans'</span>, ax<span class="op">=</span>ax2)</span>
+<span id="cb67-8"><a href="#cb67-8" aria-hidden="true" tabindex="-1"></a>ax2.set_title(<span class="st">'installment/montly_income vs num of defaulted loans'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="44">
+<pre><code>Text(0.5, 1.0, 'installment/montly_income vs num of defaulted loans')</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<p><img src="CaseStudy_Loans_EDA-scratchone_files/figure-html/cell-45-output-2.png" class="img-fluid"></p>
+</div>
+</div>
+<div class="cell" data-tags="[]" data-execution_count="45">
+<div class="sourceCode cell-code" id="cb69"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb69-1"><a href="#cb69-1" aria-hidden="true" tabindex="-1"></a>defaulted_loans <span class="op">=</span> loan_data_df[loan_data_df.loan_status <span class="op">==</span> <span class="st">'Charged Off'</span>]</span>
+<span id="cb69-2"><a href="#cb69-2" aria-hidden="true" tabindex="-1"></a>pd.cut(defaulted_loans.revol_util, bins<span class="op">=</span>np.linspace(<span class="dv">0</span>,<span class="dv">1</span>,<span class="dv">11</span>)).value_counts(sort<span class="op">=</span><span class="va">False</span>).plot.line(rot<span class="op">=</span><span class="dv">45</span>, xlabel<span class="op">=</span><span class="st">'utilization of credit available'</span>, ylabel<span class="op">=</span><span class="st">'num of defaulted loans'</span>)</span>
+<span id="cb69-3"><a href="#cb69-3" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">'utilization of credit available vs num of defaulted loans'</span>)</span>
+<span id="cb69-4"><a href="#cb69-4" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<p><img src="CaseStudy_Loans_EDA-scratchone_files/figure-html/cell-46-output-1.png" class="img-fluid"></p>
+</div>
+</div>
+
+
+</section>
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>
